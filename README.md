@@ -31,39 +31,44 @@ Analyzed 197,430 orders across multiple states/cities to identify revenue driver
 
 ## 📊 Analysis Highlights
 
-### 1. Exploratory Data Analysis (EDA)
-- Data quality assessment & missing value analysis
-- Outlier detection using IQR method
-- Statistical distributions & normality testing
+### Notebook Sections (13 Sections Total)
 
-### 2. Business Metrics & KPIs
-- Total Revenue & Order Volume
-- Average Order Value (AOV)
-- Customer Satisfaction (Rating Analysis)
-- Month-over-Month Growth Rate
+**Core Analysis (Sections 1-8):**
 
-### 3. Advanced Statistical Analysis
-- **Correlation Analysis:** Price vs Rating relationships
-- **Segmentation:** Veg/Non-Veg food categories
-- **Distribution Analysis:** Q-Q plots, skewness, kurtosis
+1. **Data Loading & EDA** - Data quality, missing values, duplicates, type validation
+2. **KPI Dashboard** - Revenue, orders, AOV, ratings, satisfaction metrics
+3. **Statistical Analysis** - Distributions, outliers, correlation, normality tests
+4. **Time Series & Trends** - Monthly/daily patterns, growth rates, momentum
+5. **Category & Geographic Analysis** - Food types, state/city breakdown, Pareto 80-20 rule
+6. **Quarterly Performance** - Quarterly sales, orders, ratings comparison
+7. **Customer Behavior & Segmentation** - RFM, value tiers (Budget→Luxury), ordering patterns
+8. **Strategic Insights & Summary** - Key metrics, top performers, actionable insights
 
-### 4. Time Series & Forecasting
-- Monthly revenue trends with moving averages
-- Daily sales patterns (day-of-week analysis)
-- Month-over-month growth rate tracking
+**Advanced Analytics (Sections 9-11):**
 
-### 5. Geographic Insights
-- State & city-level revenue breakdown
-- Top 15 states by revenue performance
-- Regional food preferences analysis
+9. **Geographic Visualizations & Maps** - Bubble maps, city heatmaps, regional analysis
+10. **Predictive Analytics & Forecasting** - Moving averages, trend smoothing, revenue projections
+11. **Executive Summary & Action Items** - Consolidated findings & recommendations
 
-### 6. Customer Segmentation
-- Revenue-based tiers: Budget, Standard, Premium, Luxury
-- Pareto analysis (80-20 rule)
-- Order value distribution analysis
+**WOW Factors (Sections 12-13):**
 
-### 7. Interactive Dashboard (Streamlit)
-**5 Analytics Tabs with 15+ Visualizations:**
+12. **Executive Business Recommendations** 🎯
+    - Top 3 states for marketing prioritization with ROI metrics
+    - Optimal price bands (Budget→Luxury) with revenue-rating trade-offs
+    - Customer tier strategies: Retention vs Acquisition by segment
+    - Decision-oriented insights for C-suite stakeholders
+
+13. **Predictive Forecasting with ARIMA** 📈
+    - ARIMA(1,1,1) time series model with statistical validation
+    - 3-month revenue forecast with 95% confidence intervals
+    - Model metrics: AIC, BIC, R-squared, error rates
+    - Actual vs predicted comparison with fallback moving average
+
+---
+
+### Interactive Dashboard (Streamlit - app.py)
+
+**5 Analytics Tabs with 20+ Visualizations:**
 - **Overview:** Food category mix, quarterly performance, daily patterns
 - **Geographic:** State/city rankings, performance scatter plots
 - **Segments:** Customer tiers, food preferences heatmap
@@ -71,23 +76,11 @@ Analyzed 197,430 orders across multiple states/cities to identify revenue driver
 - **Insights:** Pareto charts, correlation analysis, key statistics
 
 **Interactive Features:**
-- ✅ Date range filtering
-- ✅ Multi-select state filters
+- ✅ Date range filtering (dynamic across all charts)
+- ✅ Multi-select state filters  
 - ✅ Food category filtering
 - ✅ Real-time KPI cards
 - ✅ Hover tooltips & zoom capabilities
-
-### 8. Executive Business Recommendations
-- 🎯 **Top 3 States:** Prioritized marketing spend allocation
-- 💵 **Optimal Price Bands:** Revenue + rating optimization strategy
-- 🎯 **Customer Tier Strategy:** Retention vs Acquisition focus
-- 📊 Decision-oriented insights for stakeholders
-
-### 9. Predictive Forecasting (ARIMA)
-- 📈 **ARIMA Time Series Model** for revenue forecasting
-- 🔮 **3-Month Forecast** with 95% confidence intervals
-- 📊 **Model Validation:** In-sample fit with actual vs predicted
-- 🎯 Enables data-driven budgeting & planning
 
 ---
 
@@ -95,11 +88,15 @@ Analyzed 197,430 orders across multiple states/cities to identify revenue driver
 
 ```
 Data_anlytics_project/
-├── swiggy_sales_analysis.ipynb    # Full analysis notebook (60 cells)
-├── app.py                         # Streamlit dashboard app
-├── swiggy_data.xlsx               # Dataset (197,430 orders)
-├── requirements.txt               # Python dependencies
-└── README.md                      # This file
+├── swiggy_sales_analysis.ipynb    # Full analysis notebook
+│                                   # 13 sections, 60 cells
+│                                   # Sections 1-8: Core Analysis
+│                                   # Sections 9-11: Advanced Analytics
+│                                   # Sections 12-13: WOW Factors
+├── app.py                         # Streamlit dashboard (5 tabs, 20+ visualizations)
+├── swiggy_data.xlsx               # Dataset (197,430 orders × 10 columns)
+├── requirements.txt               # 11 dependencies (pandas, plotly, statsmodels...)
+└── README.md                      # Documentation (this file)
 ```
 
 ---

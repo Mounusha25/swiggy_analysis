@@ -77,6 +77,18 @@ Analyzed 197,430 orders across multiple states/cities to identify revenue driver
 - ✅ Real-time KPI cards
 - ✅ Hover tooltips & zoom capabilities
 
+### 8. Executive Business Recommendations
+- 🎯 **Top 3 States:** Prioritized marketing spend allocation
+- 💵 **Optimal Price Bands:** Revenue + rating optimization strategy
+- 🎯 **Customer Tier Strategy:** Retention vs Acquisition focus
+- 📊 Decision-oriented insights for stakeholders
+
+### 9. Predictive Forecasting (ARIMA)
+- 📈 **ARIMA Time Series Model** for revenue forecasting
+- 🔮 **3-Month Forecast** with 95% confidence intervals
+- 📊 **Model Validation:** In-sample fit with actual vs predicted
+- 🎯 Enables data-driven budgeting & planning
+
 ---
 
 ## 📁 Project Structure
@@ -131,9 +143,56 @@ python3 -m streamlit run app.py
 - ✅ **Data Analysis:** Pandas, NumPy, exploratory analysis
 - ✅ **Statistical Methods:** Correlation, distribution, outlier detection
 - ✅ **Data Visualization:** Interactive dashboards, storytelling
-- ✅ **Time Series:** Trends, moving averages, forecasting
-- ✅ **Business Intelligence:** KPIs, segmentation, Pareto analysis
+- ✅ **Time Series:** Trends, moving averages, ARIMA forecasting
+- ✅ **Business Intelligence:** KPIs, segmentation, Pareto analysis, recommendations
 - ✅ **Python Development:** Clean code, documentation, best practices
+- ✅ **Predictive Modeling:** ARIMA forecasting, model validation
+- ✅ **SQL Translation:** All analysis logic is database-translatable
+
+---
+
+## 🗄️ SQL-Ready Analysis (ATS & Data Engineering Bonus)
+
+**Key Feature:** All analysis logic in this project can be directly translated to **SQL** for production pipelines.
+
+### SQL-Equivalent Operations Used:
+
+| Python (Pandas) | SQL Equivalent | Use Case |
+|---|---|---|
+| `groupby().agg()` | `GROUP BY` + aggregates | Revenue by state, city |
+| `groupby().cumsum()` | Window Functions `SUM() OVER()` | Cumulative revenue, Pareto analysis |
+| `merge()` on multiple keys | `JOIN ... ON` conditions | State-city hierarchies |
+| `rolling()` | Window Functions `ROWS BETWEEN` | Moving averages, trends |
+| `.rank()` / `.nlargest()` | `ROW_NUMBER()`, `RANK()` | Top N rankings |
+| `.cut()` binning | `CASE WHEN` statements | Customer segmentation |
+| Time-based grouping | `DATE_TRUNC()`, `EXTRACT()` | Monthly/quarterly rollups |
+
+### Production-Ready Patterns Demonstrated:
+```sql
+-- Example: Pareto Analysis (80-20 Rule)
+WITH city_revenue AS (
+    SELECT City, SUM(price) as revenue
+    FROM orders GROUP BY City
+),
+ranked_revenue AS (
+    SELECT City, revenue,
+           SUM(revenue) OVER (ORDER BY revenue DESC) as cumulative_revenue
+    FROM city_revenue
+),
+total_revenue AS (
+    SELECT SUM(revenue) as total FROM city_revenue
+)
+SELECT city, revenue,
+       (cumulative_revenue / total * 100) as cumulative_pct
+FROM ranked_revenue, total_revenue
+WHERE cumulative_revenue <= (total * 0.8);
+```
+
+**Why This Matters:**
+- 🎯 Shows understanding of **scalable data architecture**
+- 🎯 Demonstrates **production-ready thinking**
+- 🎯 Qualifies for **SQL + Python hybrid roles**
+- 🎯 Broadens eligibility to **Data Engineering** positions
 
 
 ---

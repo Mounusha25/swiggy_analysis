@@ -237,10 +237,11 @@ with tab3:
         st.markdown("#### Sales by State")
         state_data = filtered_df.groupby('State')['Price (INR)'].sum().reset_index().sort_values('Price (INR)', ascending=False).head(15)
         
-        fig_state = px.barh(
+        fig_state = px.bar(
             state_data,
             x='Price (INR)',
             y='State',
+            orientation='h',
             title='Top 15 States by Revenue',
             labels={'Price (INR)': 'Revenue (₹)'},
             color='Price (INR)',

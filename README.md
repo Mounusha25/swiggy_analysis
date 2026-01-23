@@ -26,7 +26,9 @@ A comprehensive end-to-end data analysis project analyzing Swiggy's food deliver
 | **Data Processing** | Pandas, NumPy |
 | **Visualization** | Plotly, Matplotlib, Seaborn |
 | **Statistical Analysis** | SciPy, Statsmodels |
+| **Dashboard** | Streamlit |
 | **Environment** | Jupyter Notebook |
+| **Deployment** | Streamlit Cloud, GitHub |
 
 ---
 
@@ -73,6 +75,19 @@ A comprehensive end-to-end data analysis project analyzing Swiggy's food deliver
 - Data-driven business insights
 - Actionable recommendations for stakeholders
 - Executive summary with KPIs
+
+### 9. **Interactive Dashboard (NEW)**
+- **Real-time KPI Tracking:** Total sales, orders, AOV, ratings, cities
+- **Dynamic Filtering:** Date range, food category, state-level filtering
+- **5 Analytics Tabs:**
+  - Sales Trends (Monthly & Daily patterns)
+  - Category Analysis (Veg vs Non-Veg performance)
+  - Geographic Insights (State & city-level breakdown)
+  - Quarterly Performance (Multi-metric analysis)
+  - Customer Segmentation (Budget to Luxury tiers)
+- **Interactive Visualizations:** Hover, zoom, download capabilities
+- **Responsive Design:** Works on desktop, tablet, mobile
+- **Built with:** Streamlit + Plotly
 
 ---
 
@@ -134,6 +149,28 @@ pip install -r requirements.txt
 jupyter notebook swiggy_sales_analysis.ipynb
 ```
 
+### 🎯 Running the Interactive Dashboard
+
+```bash
+# Install Streamlit if not already installed
+pip install streamlit
+
+# Run the dashboard
+streamlit run streamlit_app.py
+
+# Access at: http://localhost:8501
+```
+
+**Dashboard Features:**
+- ✅ Real-time KPI metrics
+- ✅ Interactive filters (date, category, state)
+- ✅ 5 analytics tabs with 15+ visualizations
+- ✅ Customer segmentation analysis
+- ✅ Responsive design for all devices
+
+📖 See [DASHBOARD_GUIDE.md](DASHBOARD_GUIDE.md) for detailed setup and usage instructions.
+````
+
 ### Running the Analysis
 1. Open `swiggy_sales_analysis.ipynb`
 2. Run cells sequentially (Cell → Run All)
@@ -170,15 +207,6 @@ The notebook includes:
 - ✅ **Problem Solving:** Root cause analysis, optimization strategies
 - ✅ **Domain Knowledge:** E-commerce, food delivery metrics
 
----
-
-## 🎓 Learning Outcomes
-
-This project demonstrates capabilities essential for **Data Analyst/Analytics Engineer** roles at:
-- **Airbnb:** Marketplace analytics, geographic insights
-- **Uber:** Demand forecasting, geographic optimization
-- **DoorDash:** Delivery analytics, customer segmentation
-- **Amazon:** E-commerce analytics, revenue optimization
 
 ---
 
@@ -195,11 +223,11 @@ This project demonstrates capabilities essential for **Data Analyst/Analytics En
 
 ## 👤 Author
 
-**[Your Name]**
-- 📧 Email: [mettti.mounu@gmail.com]
-- 💼 LinkedIn: [linkedin.com/in/mounusha-ram-metti]
-- 🌐 Portfolio: [https://mounushametti.vercel.app/]
-- 💻 GitHub: [github.com/Mounusha25]
+**Mounusha Ram Metti**
+- 📧 Email: mettti.mounu@gmail.com
+- 💼 LinkedIn: linkedin.com/in/mounusha-ram-metti
+- 🌐 Portfolio: https://mounushametti.vercel.app/
+- 💻 GitHub: github.com/Mounusha25
 
 ---
 

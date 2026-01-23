@@ -218,11 +218,12 @@ with tab2:
         # Top states by revenue
         state_revenue = df_filtered.groupby("State", as_index=False)['Price (INR)'].sum().sort_values('Price (INR)', ascending=True).tail(15)
         
-        fig_state = px.barh(
+        fig_state = px.bar(
             state_revenue,
             x="Price (INR)",
             y="State",
             title="Top 15 States by Revenue",
+            orientation='h',
             color="Price (INR)",
             color_continuous_scale='Blues'
         )
@@ -230,17 +231,18 @@ with tab2:
     
     with col2:
         # Top cities
-        city_revenue = (df_filtered.groupby("City")[("Price (INR)")]
+        city_revenue = (df_filtered.groupby("City")["Price (INR)"]
                        .sum()
                        .nlargest(10)
                        .sort_values()
                        .reset_index())
         
-        fig_city = px.barh(
+        fig_city = px.bar(
             city_revenue,
             x="Price (INR)",
             y="City",
             title="Top 10 Cities by Revenue",
+            orientation='h',
             color="Price (INR)",
             color_continuous_scale='Greens'
         )
@@ -462,8 +464,9 @@ with tab5:
         else:
             st.info("💡 **Strong correlation** - Price significantly impacts customer satisfaction")
         
+        sample_size = min(1000, len(df_filtered))
         fig_scatter = px.scatter(
-            df_filtered.sample(min(1000, len(df_filtered))),
+            df_filtered.sample(n=sample_size),
             x='Rating',
             y='Price (INR)',
             title='Price vs Rating (Sample)',

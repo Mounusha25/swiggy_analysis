@@ -1,5 +1,7 @@
 # 🍽️ Swiggy Market Intelligence Engine
 
+![Swiggy Market Intelligence Engine](swiggy_cover.png)
+
 [![Python](https://img.shields.io/badge/Python-3.10+-blue?logo=python&logoColor=white)](https://python.org)
 [![Pandas](https://img.shields.io/badge/Pandas-2.0+-150458?logo=pandas&logoColor=white)](https://pandas.pydata.org)
 [![Plotly](https://img.shields.io/badge/Plotly-5.14+-3F4F75?logo=plotly&logoColor=white)](https://plotly.com)

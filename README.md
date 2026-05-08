@@ -12,6 +12,21 @@
 
 ---
 
+## About This Project
+
+This project is a full-stack data analytics solution built on **197,430 real Swiggy food delivery orders** across India. It goes beyond surface-level charts to answer the kind of strategic questions a growth analyst or product manager at Swiggy would actually care about.
+
+The project combines **exploratory data analysis, statistical testing, machine learning scoring models, SQL pipelines, and revenue forecasting** into a single cohesive system — delivered through an interactive Streamlit dashboard, a 66-cell Jupyter notebook, and a downloadable 13-sheet Excel KPI report.
+
+Three original analytical frameworks sit at the core:
+- **City Expansion Opportunity Index** — a composite model that ranks every city by growth potential
+- **Menu Intelligence Matrix** — a BCG-style quadrant chart classifying food categories by revenue and satisfaction
+- **Restaurant Health Score** — a viability index that flags at-risk restaurants before they churn
+
+Whether you're exploring the data, running SQL queries, or reviewing the forecasting model, everything is connected through a single source of truth: `swiggy_data.xlsx`.
+
+---
+
 ## 5 Strategic Questions This Project Answers — With Data
 
 | # | Question | Framework / Method |

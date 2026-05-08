@@ -136,4 +136,5 @@ Thumbs.db
 # Project specific
 *.xlsx
 *.csv
+*.db
 .ipynb_checkpoints/

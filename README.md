@@ -1,200 +1,206 @@
-# 🍽️ Swiggy Sales Analysis - End-to-End Analytics Project
+# 🍽️ Swiggy Market Intelligence Engine
 
-A comprehensive data analysis project on Swiggy's food delivery platform demonstrating **Python**, **statistical analysis**, **data visualization**, and **interactive dashboards**. 
+[![Python](https://img.shields.io/badge/Python-3.10+-blue?logo=python&logoColor=white)](https://python.org)
+[![Pandas](https://img.shields.io/badge/Pandas-2.0+-150458?logo=pandas&logoColor=white)](https://pandas.pydata.org)
+[![Plotly](https://img.shields.io/badge/Plotly-5.14+-3F4F75?logo=plotly&logoColor=white)](https://plotly.com)
+[![Streamlit](https://img.shields.io/badge/Streamlit-1.28+-FF4B4B?logo=streamlit&logoColor=white)](https://streamlit.io)
+[![SQLite](https://img.shields.io/badge/SQLite-3+-003B57?logo=sqlite&logoColor=white)](https://sqlite.org)
 
-## 📌 Overview
-
-Analyzed 197,430 orders across multiple states/cities to identify revenue drivers, customer behavior patterns, and growth opportunities. Features both a **detailed Jupyter notebook** and an **interactive Streamlit dashboard** for business intelligence.
-
-**Key Metrics:**
-- ₹ Total Revenue Analysis
-- 📊 197,430 Orders Analyzed  
-- 🗺️ Multi-State Geographic Insights
-- 📈 Time Series & Trend Analysis
-- 🎯 Customer Segmentation (4 value tiers)
-- 80/20 Pareto Analysis
+> **Not just charts. A decision-support system for Swiggy's growth team.**
 
 ---
 
-## 🛠️ Tech Stack
+## 5 Strategic Questions This Project Answers — With Data
 
-| Component | Tools |
+| # | Question | Framework / Method |
+|---|----------|--------------------|
+| 1 | Which cities should Swiggy expand into next? | City Expansion Opportunity Index |
+| 2 | Which restaurants are at risk of churning off the platform? | Restaurant Health Score |
+| 3 | Which food categories are Stars vs Dogs in our portfolio? | Menu Intelligence Matrix |
+| 4 | When is peak demand, and how should ops scale? | Synthetic demand modelling + time-of-day analysis |
+| 5 | What does revenue look like in the next 3 months? | ARIMA forecasting with train/test validation |
+
+---
+
+## What Makes This Different?
+
+Most Swiggy analysis projects produce the same bar charts. This project builds **three proprietary analytical frameworks** modelled on consulting methodology:
+
+### 🏙️ A1 — City Expansion Opportunity Index
+A 4-signal composite model that scores every city 0–100:
+- **Revenue Growth Rate (30%)** — Is the market accelerating?
+- **Weighted Customer Rating (25%)** — Does the market have satisfied customers?
+- **Order Density / restaurant (25%)** — How efficient is the market?
+- **Category Diversity (20%)** — How sticky is the platform?
+
+Produces a strategic 4-quadrant scatter: **Stars / Untapped / Emerging / Low Priority**.
+
+### 🍽️ A3 — Menu Intelligence Matrix (BCG-Style)
+Classifies food categories into four strategic quadrants:
+- ⭐ **Stars** — High revenue share + high rating → *Promote aggressively*
+- 💎 **Hidden Gems** — Low revenue + high rating → *Invest in discovery*
+- 💰 **Cash Cows** — High revenue + lower rating → *Maintain and improve*
+- ⚠️ **Review Needed** — Low revenue + low rating → *Revamp or discontinue*
+
+### 🏥 A2 — Restaurant Health Score (Composite Viability Index)
+Assigns each restaurant a Health Score (0–100):
+- Revenue contribution (40%) + Customer satisfaction (30%) + Order volume (20%) + Recency (10%)
+- Tiered output: **Champion / Healthy / At Risk / Critical**
+
+---
+
+## Dataset
+
+| Attribute | Value |
 |-----------|-------|
-| **Language** | Python 3.9+ |
-| **Data** | Pandas, NumPy |
-| **Visualization** | Plotly, Matplotlib, Seaborn |
-| **Statistics** | SciPy, Statsmodels |
-| **Dashboard** | Streamlit |
-| **Environment** | Jupyter Notebook |
+| Source | Swiggy platform orders |
+| Rows | **197,430** |
+| Columns | 10 |
+| Key Fields | `State`, `City`, `Order Date`, `Restaurant Name`, `Category`, `Dish Name`, `Price (INR)`, `Rating`, `Rating Count` |
 
 ---
 
-## 📊 Analysis Highlights
-
-### Notebook Sections (13 Sections Total)
-
-**Core Analysis (Sections 1-8):**
-
-1. **Data Loading & EDA** - Data quality, missing values, duplicates, type validation
-2. **KPI Dashboard** - Revenue, orders, AOV, ratings, satisfaction metrics
-3. **Statistical Analysis** - Distributions, outliers, correlation, normality tests
-4. **Time Series & Trends** - Monthly/daily patterns, growth rates, momentum
-5. **Category & Geographic Analysis** - Food types, state/city breakdown, Pareto 80-20 rule
-6. **Quarterly Performance** - Quarterly sales, orders, ratings comparison
-7. **Customer Behavior & Segmentation** - RFM, value tiers (Budget→Luxury), ordering patterns
-8. **Strategic Insights & Summary** - Key metrics, top performers, actionable insights
-
-**Advanced Analytics (Sections 9-11):**
-
-9. **Geographic Visualizations & Maps** - Bubble maps, city heatmaps, regional analysis
-10. **Predictive Analytics & Forecasting** - Moving averages, trend smoothing, revenue projections
-11. **Executive Summary & Action Items** - Consolidated findings & recommendations
-
-**WOW Factors (Sections 12-13):**
-
-12. **Executive Business Recommendations** 🎯
-    - Top 3 states for marketing prioritization with ROI metrics
-    - Optimal price bands (Budget→Luxury) with revenue-rating trade-offs
-    - Customer tier strategies: Retention vs Acquisition by segment
-    - Decision-oriented insights for C-suite stakeholders
-
-13. **Predictive Forecasting with ARIMA** 📈
-    - ARIMA(1,1,1) time series model with statistical validation
-    - 3-month revenue forecast with 95% confidence intervals
-    - Model metrics: AIC, BIC, R-squared, error rates
-    - Actual vs predicted comparison with fallback moving average
-
----
-
-### Interactive Dashboard (Streamlit - app.py)
-
-**5 Analytics Tabs with 20+ Visualizations:**
-- **Overview:** Food category mix, quarterly performance, daily patterns
-- **Geographic:** State/city rankings, performance scatter plots
-- **Segments:** Customer tiers, food preferences heatmap
-- **Trends:** Monthly revenue with MA, growth rate analysis
-- **Insights:** Pareto charts, correlation analysis, key statistics
-
-**Interactive Features:**
-- ✅ Date range filtering (dynamic across all charts)
-- ✅ Multi-select state filters  
-- ✅ Food category filtering
-- ✅ Real-time KPI cards
-- ✅ Hover tooltips & zoom capabilities
-
----
-
-## 📁 Project Structure
+## Project Structure
 
 ```
-Data_anlytics_project/
-├── swiggy_sales_analysis.ipynb    # Full analysis notebook
-│                                   # 13 sections, 60 cells
-│                                   # Sections 1-8: Core Analysis
-│                                   # Sections 9-11: Advanced Analytics
-│                                   # Sections 12-13: WOW Factors
-├── app.py                         # Streamlit dashboard (5 tabs, 20+ visualizations)
-├── swiggy_data.xlsx               # Dataset (197,430 orders × 10 columns)
-├── requirements.txt               # 11 dependencies (pandas, plotly, statsmodels...)
-└── README.md                      # Documentation (this file)
+swiggy-market-intelligence/
+│
+├── app.py                      # Streamlit dashboard (7 tabs)
+├── swiggy_sales_analysis.ipynb # Main analysis notebook (66 cells)
+├── sql_pipeline.py             # SQLite DB + 10 analytics queries
+├── generate_excel_report.py    # 13-sheet formatted Excel KPI report
+├── swiggy_data.xlsx            # Source dataset
+├── requirements.txt            # 12 dependencies
+└── README.md
 ```
 
 ---
 
-## 🚀 Quick Start
+## Dashboard — 7 Tabs
 
-### Option 1: Jupyter Notebook (Full Analysis)
+| Tab | Content |
+|-----|---------|
+| 📈 Overview | Revenue KPIs, quarterly performance, day-of-week patterns |
+| 🗺️ Geographic | State/city heatmaps, revenue vs rating scatter |
+| 🎯 Segments | Order-value segments, food preference heatmap, frequency tiers, time-of-day analysis |
+| 📉 Trends | Monthly trend + 3-month moving average, MoM growth rate |
+| 💡 Insights | Pareto 80-20 analysis, price-rating correlation, **Menu Intelligence Matrix** |
+| 🗄️ SQL Pipeline | 10 SQL queries running against a live SQLite database |
+| 📍 Expansion Strategy | **City Expansion Opportunity Index** + **Restaurant Health Score** |
+
+---
+
+## Notebook — 66 Cells Across 13 Sections
+
+```
+§ 0   Executive Summary
+§ 1   Data Loading & Quality Audit
+§ 2   Weighted Rating Analysis
+§ 3   Revenue Overview
+§ 4   Monthly Trend & MoM Growth
+§ 5   Category & Geographic Analysis
+      ↳ A3: Menu Intelligence Matrix (BCG Framework)
+      ↳ A1: City Expansion Opportunity Index
+§ 6   Quarterly Performance
+§ 7   Customer Segmentation
+      ↳ A2: Restaurant Health Score
+      ↳ 7.1 RFM Analysis
+      ↳ 7.2 Peak Hours (synthetic demand)
+      ↳ 7.3 Cohort Retention
+      ↳ 7.4 Hypothesis Testing (Mann-Whitney U, ANOVA)
+§ 8   Correlation & Price Analysis
+§ 9   Geographic Visualisations
+§10   Predictive Forecasting (ARIMA with MAPE vs naive baseline)
+§11   SQL Integration Demo
+§12   Excel Report Generation
+```
+
+---
+
+## SQL Analytics Pipeline
+
+10 queries run against a **SQLite database built from `swiggy_data.xlsx`** — replicating a real data-engineering pipeline:
+
+1. Monthly Revenue Trend
+2. Revenue by State
+3. Revenue by Category
+4. Quarterly Performance
+5. Top Dishes by Revenue
+6. Top Restaurants
+7. Day-of-Week Patterns
+8. Customer Basket Segmentation
+9. Restaurant Frequency Tiers
+10. Pareto 80% Cities
+
+---
+
+## Excel KPI Report — 13 Sheets
+
+Generated on-demand from the dashboard (Download button in sidebar):
+
+`Summary KPIs` · `Monthly Trend` · `Quarterly Performance` · `Top States` · `Top Cities` · `Top Dishes` · `Category Mix` · `Customer Segments` · `Pareto Analysis` · `Day of Week` · `Time of Day` · `Price-Rating` · `Restaurant Frequency`
+
+---
+
+## Tech Stack
+
+| Layer | Tools |
+|-------|-------|
+| Data Wrangling | Python, Pandas, NumPy |
+| Visualisation | Plotly (interactive), Matplotlib, Seaborn |
+| Statistics | SciPy (Mann-Whitney U, ANOVA), Statsmodels (ARIMA) |
+| ML / Scoring | scikit-learn (MinMaxScaler for composite indices) |
+| Database | SQLite (via Python stdlib) |
+| Dashboard | Streamlit |
+| Reporting | openpyxl (13-sheet Excel) |
+
+---
+
+## Quick Start
 
 ```bash
-# Install dependencies
+# 1. Clone and install
+git clone https://github.com/Mounusha25/swiggy-market-intelligence.git
+cd swiggy-market-intelligence
 pip install -r requirements.txt
 
-# Launch Jupyter
+# 2. Launch the dashboard
+streamlit run app.py
+
+# 3. Open the notebook
 jupyter notebook swiggy_sales_analysis.ipynb
 ```
 
-Run cells sequentially to explore all analysis sections.
-
-### Option 2: Interactive Dashboard (Streamlit)
-
-```bash
-# Install dependencies
-pip install -r requirements.txt
-
-# Run dashboard
-python3 -m streamlit run app.py
-
-# Open browser to: http://localhost:8501
-```
-
-**Dashboard Usage:**
-- Use sidebar filters to explore data dynamically
-- Click tabs to view different analytics sections
-- Hover over charts for detailed tooltips
-- Download visualizations using chart tools
+> ⚠️ Place `swiggy_data.xlsx` in the project root before running.
 
 ---
 
-## 💼 Skills Demonstrated
+## Key Findings
 
-- ✅ **Data Analysis:** Pandas, NumPy, exploratory analysis
-- ✅ **Statistical Methods:** Correlation, distribution, outlier detection
-- ✅ **Data Visualization:** Interactive dashboards, storytelling
-- ✅ **Time Series:** Trends, moving averages, ARIMA forecasting
-- ✅ **Business Intelligence:** KPIs, segmentation, Pareto analysis, recommendations
-- ✅ **Python Development:** Clean code, documentation, best practices
-- ✅ **Predictive Modeling:** ARIMA forecasting, model validation
-- ✅ **SQL Translation:** All analysis logic is database-translatable
+- **Pareto effect confirmed**: ~20% of cities generate ~80% of revenue
+- **Untapped markets identified**: Several tier-2 cities score high on the Expansion Index despite low current revenue
+- **Critical restaurants flagged**: ~15% of restaurants score below 25 on the Health Score — candidates for platform intervention
+- **Star categories**: A small number of food categories drive disproportionate revenue with high satisfaction — clear marketing priorities
+- **Demand peaks**: Lunch (11–13h) and Dinner (19–22h) dominate; weekends outperform weekdays
 
 ---
 
-## 🗄️ SQL-Ready Analysis (ATS & Data Engineering Bonus)
+## Skills Demonstrated
 
-**Key Feature:** All analysis logic in this project can be directly translated to **SQL** for production pipelines.
+- ✅ **Analytical Frameworks** — BCG-style matrix, composite scoring models (consulting methodology)
+- ✅ **Data Analysis** — Pandas, NumPy, exploratory analysis, outlier detection
+- ✅ **Statistical Methods** — Mann-Whitney U, ANOVA, correlation analysis, normality tests
+- ✅ **Visualisation** — Interactive Plotly dashboards, storytelling with data
+- ✅ **Forecasting** — ARIMA with train/test split, MAPE vs naive baseline comparison
+- ✅ **SQL** — 10 production-style queries, SQLite pipeline, window functions
+- ✅ **Business Intelligence** — KPI design, customer segmentation, Pareto analysis
+- ✅ **Software Engineering** — Modular Python, Streamlit app, downloadable Excel reports
 
-### SQL-Equivalent Operations Used:
-
-| Python (Pandas) | SQL Equivalent | Use Case |
-|---|---|---|
-| `groupby().agg()` | `GROUP BY` + aggregates | Revenue by state, city |
-| `groupby().cumsum()` | Window Functions `SUM() OVER()` | Cumulative revenue, Pareto analysis |
-| `merge()` on multiple keys | `JOIN ... ON` conditions | State-city hierarchies |
-| `rolling()` | Window Functions `ROWS BETWEEN` | Moving averages, trends |
-| `.rank()` / `.nlargest()` | `ROW_NUMBER()`, `RANK()` | Top N rankings |
-| `.cut()` binning | `CASE WHEN` statements | Customer segmentation |
-| Time-based grouping | `DATE_TRUNC()`, `EXTRACT()` | Monthly/quarterly rollups |
-
-### Production-Ready Patterns Demonstrated:
-```sql
--- Example: Pareto Analysis (80-20 Rule)
-WITH city_revenue AS (
-    SELECT City, SUM(price) as revenue
-    FROM orders GROUP BY City
-),
-ranked_revenue AS (
-    SELECT City, revenue,
-           SUM(revenue) OVER (ORDER BY revenue DESC) as cumulative_revenue
-    FROM city_revenue
-),
-total_revenue AS (
-    SELECT SUM(revenue) as total FROM city_revenue
-)
-SELECT city, revenue,
-       (cumulative_revenue / total * 100) as cumulative_pct
-FROM ranked_revenue, total_revenue
-WHERE cumulative_revenue <= (total * 0.8);
-```
-
-**Why This Matters:**
-- 🎯 Shows understanding of **scalable data architecture**
-- 🎯 Demonstrates **production-ready thinking**
-- 🎯 Qualifies for **SQL + Python hybrid roles**
-- 🎯 Broadens eligibility to **Data Engineering** positions
 
 
 ---
 
-## � Contact & Links
+## 📬 Contact & Links
 
 **Mounusha Ram Metti**
 - 📧 Email: mettti.mounu@gmail.com

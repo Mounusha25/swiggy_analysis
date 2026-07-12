@@ -21,6 +21,33 @@ DATE_COL = "Order Date"
 ENTITY_COL = "Restaurant Name"
 
 
+def classify_food_category(dish_names: pd.Series) -> pd.Series:
+    """
+    Classify dishes as Veg / Non-Veg using conservative keyword rules.
+
+    Broad dish types like biryani or kebab are not treated as non-veg on their
+    own because vegetarian variants are common.
+    """
+    dish_text = dish_names.fillna("").astype(str).str.lower()
+
+    veg_override_pattern = (
+        r"\b(?:veg|vegetarian|pure veg|eggless|no egg|without egg|paneer|mushroom|"
+        r"aloo|gobi|dal|chole|soya|tofu)\b"
+    )
+    explicit_non_veg_pattern = r"\bnon[-\s]?veg\b"
+    non_veg_pattern = (
+        r"\b(?:chicken|mutton|fish|prawn|shrimp|seafood|meat|"
+        r"lamb|beef|pork|crab|egg)\b"
+    )
+
+    explicit_non_veg = dish_text.str.contains(explicit_non_veg_pattern, regex=True, na=False)
+    veg_override = dish_text.str.contains(veg_override_pattern, regex=True, na=False) & ~explicit_non_veg
+    non_veg = explicit_non_veg | (
+        dish_text.str.contains(non_veg_pattern, regex=True, na=False) & ~veg_override
+    )
+    return pd.Series(np.where(non_veg, "Non-Veg", "Veg"), index=dish_names.index)
+
+
 def prepare_order_data(df: pd.DataFrame, include_synthetic_hour: bool = False) -> pd.DataFrame:
     """Return a copy of the orders data with common derived columns."""
     data = df.copy()
@@ -36,25 +63,7 @@ def prepare_order_data(df: pd.DataFrame, include_synthetic_hour: bool = False) -
         labels=["Budget (<=200)", "Standard (201-500)", "Premium (501-1000)", "Luxury (>1000)"],
     )
 
-    non_veg_keywords = [
-        "chicken",
-        "mutton",
-        "fish",
-        "egg",
-        "prawn",
-        "meat",
-        "biryani",
-        "kebab",
-        "seafood",
-        "non-veg",
-        "non veg",
-        "kabab",
-    ]
-    data["Food Category"] = np.where(
-        data["Dish Name"].str.lower().str.contains("|".join(non_veg_keywords), na=False),
-        "Non-Veg",
-        "Veg",
-    )
+    data["Food Category"] = classify_food_category(data["Dish Name"])
 
     if include_synthetic_hour and "Order Hour" not in data.columns:
         rng = np.random.default_rng(42)

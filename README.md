@@ -16,7 +16,7 @@
 
 This project is a full-stack data analytics solution built on **197,430 real Swiggy food delivery orders** across India. It goes beyond surface-level charts to answer the kind of strategic questions a growth analyst or product manager at Swiggy would actually care about.
 
-The project combines **exploratory data analysis, statistical testing, machine learning scoring models, SQL pipelines, and revenue forecasting** into a single cohesive system — delivered through an interactive Streamlit dashboard, a 66-cell Jupyter notebook, and a downloadable 13-sheet Excel KPI report.
+The project combines **exploratory data analysis, statistical testing, machine learning scoring models, SQL pipelines, and revenue forecasting** into a single cohesive system — delivered through an interactive Streamlit dashboard, a 66-cell Jupyter notebook, and a downloadable 20-sheet Excel KPI report.
 
 Three original analytical frameworks sit at the core:
 - **City Expansion Opportunity Index** — a composite model that ranks every city by growth potential
@@ -82,10 +82,13 @@ Assigns each restaurant a Health Score (0–100):
 ```
 swiggy-market-intelligence/
 │
-├── app.py                      # Streamlit dashboard (7 tabs)
+├── app.py                      # Streamlit dashboard entrypoint
+├── dashboard_ui.py             # Page layout, sidebar filters, KPIs, footer
+├── dashboard_tabs.py           # 8 dashboard tab renderers
+├── analytics_models.py         # RFM, cohorts, statistical tests, forecast validation
 ├── swiggy_sales_analysis.ipynb # Main analysis notebook (66 cells)
-├── sql_pipeline.py             # SQLite DB + 10 analytics queries
-├── generate_excel_report.py    # 13-sheet formatted Excel KPI report
+├── sql_pipeline.py             # SQLite DB + 12 analytics queries
+├── generate_excel_report.py    # 20-sheet formatted Excel KPI report
 ├── swiggy_data.xlsx            # Source dataset
 ├── requirements.txt            # 12 dependencies
 └── README.md
@@ -93,7 +96,7 @@ swiggy-market-intelligence/
 
 ---
 
-## Dashboard — 7 Tabs
+## Dashboard — 8 Tabs
 
 | Tab | Content |
 |-----|---------|
@@ -102,7 +105,8 @@ swiggy-market-intelligence/
 | 🎯 Segments | Order-value segments, food preference heatmap, frequency tiers, time-of-day analysis |
 | 📉 Trends | Monthly trend + 3-month moving average, MoM growth rate |
 | 💡 Insights | Pareto 80-20 analysis, price-rating correlation, **Menu Intelligence Matrix** |
-| 🗄️ SQL Pipeline | 10 SQL queries running against a live SQLite database |
+| 🧪 Advanced Analytics | RFM, cohort retention, Mann-Whitney U, ANOVA, ARIMA validation |
+| 🗄️ SQL Pipeline | 12 SQL queries running against a live SQLite database |
 | 📍 Expansion Strategy | **City Expansion Opportunity Index** + **Restaurant Health Score** |
 
 ---
@@ -136,7 +140,7 @@ swiggy-market-intelligence/
 
 ## SQL Analytics Pipeline
 
-10 queries run against a **SQLite database built from `swiggy_data.xlsx`** — replicating a real data-engineering pipeline:
+12 queries run against a **SQLite database built from `swiggy_data.xlsx`** — replicating a real data-engineering pipeline:
 
 1. Monthly Revenue Trend
 2. Revenue by State
@@ -148,14 +152,16 @@ swiggy-market-intelligence/
 8. Customer Basket Segmentation
 9. Restaurant Frequency Tiers
 10. Pareto 80% Cities
+11. Restaurant RFM Segmentation
+12. Restaurant Cohort Retention
 
 ---
 
-## Excel KPI Report — 13 Sheets
+## Excel KPI Report — 20 Sheets
 
 Generated on-demand from the dashboard (Download button in sidebar):
 
-`Summary KPIs` · `Monthly Trend` · `Quarterly Performance` · `Top States` · `Top Cities` · `Top Dishes` · `Category Mix` · `Customer Segments` · `Pareto Analysis` · `Day of Week` · `Time of Day` · `Price-Rating` · `Restaurant Frequency`
+`Summary KPIs` · `Monthly Trend` · `Quarterly Performance` · `Top States` · `Top Cities` · `Top Dishes` · `Category Mix` · `Customer Segments` · `Pareto Analysis` · `Day of Week` · `Time of Day` · `Price-Rating` · `Restaurant Frequency` · `RFM Summary` · `RFM Detail` · `Cohort Retention` · `Statistical Tests` · `Forecast Validation` · `Forecast Metrics` · `Revenue Forecast`
 
 ---
 
@@ -169,7 +175,7 @@ Generated on-demand from the dashboard (Download button in sidebar):
 | ML / Scoring | scikit-learn (MinMaxScaler for composite indices) |
 | Database | SQLite (via Python stdlib) |
 | Dashboard | Streamlit |
-| Reporting | openpyxl (13-sheet Excel) |
+| Reporting | openpyxl (20-sheet Excel) |
 
 ---
 
@@ -194,11 +200,23 @@ jupyter notebook swiggy_sales_analysis.ipynb
 
 ## Key Findings
 
-- **Pareto effect confirmed**: ~20% of cities generate ~80% of revenue
+- **Revenue concentration measured**: Pareto analysis identifies the exact city set needed to reach 80% of revenue
 - **Untapped markets identified**: Several tier-2 cities score high on the Expansion Index despite low current revenue
-- **Critical restaurants flagged**: ~15% of restaurants score below 25 on the Health Score — candidates for platform intervention
+- **Critical restaurants flagged**: Restaurant Health Score surfaces partners below the intervention threshold
 - **Star categories**: A small number of food categories drive disproportionate revenue with high satisfaction — clear marketing priorities
-- **Demand peaks**: Lunch (11–13h) and Dinner (19–22h) dominate; weekends outperform weekdays
+- **Demand peaks**: Lunch (11–13h) and Dinner (19–22h) dominate in the modelled time-of-day scenario; weekends slightly outperform weekdays
+
+---
+
+## Advanced Analytics Implementation Notes
+
+The dataset does not include a `Customer ID` or real order timestamp. To keep the analysis honest and reproducible:
+
+- **RFM analysis** is implemented as restaurant-partner RFM using `Restaurant Name` as the entity.
+- **Cohort retention** is implemented as restaurant-partner monthly cohort retention.
+- **Peak-hour analysis** uses a clearly labelled synthetic demand distribution because only `Order Date` is available.
+- **Forecasting** validates ARIMA against naive and 3-month moving-average baselines using holdout months, with MAPE/RMSE shown in the dashboard and Excel report.
+- **Statistical testing** uses SciPy Mann-Whitney U tests for Veg vs Non-Veg distributions and ANOVA across value tiers/cities.
 
 ---
 
@@ -206,10 +224,10 @@ jupyter notebook swiggy_sales_analysis.ipynb
 
 - ✅ **Analytical Frameworks** — BCG-style matrix, composite scoring models (consulting methodology)
 - ✅ **Data Analysis** — Pandas, NumPy, exploratory analysis, outlier detection
-- ✅ **Statistical Methods** — Mann-Whitney U, ANOVA, correlation analysis, normality tests
+- ✅ **Statistical Methods** — Mann-Whitney U, ANOVA, correlation analysis
 - ✅ **Visualisation** — Interactive Plotly dashboards, storytelling with data
 - ✅ **Forecasting** — ARIMA with train/test split, MAPE vs naive baseline comparison
-- ✅ **SQL** — 10 production-style queries, SQLite pipeline, window functions
+- ✅ **SQL** — 12 production-style queries, SQLite pipeline, window functions
 - ✅ **Business Intelligence** — KPI design, customer segmentation, Pareto analysis
 - ✅ **Software Engineering** — Modular Python, Streamlit app, downloadable Excel reports
 

@@ -1,7 +1,7 @@
 """
 generate_excel_report.py
 ------------------------
-Generates a formatted 13-sheet Excel KPI report from Swiggy order data
+Generates a formatted 20-sheet Excel KPI report from Swiggy order data
 using openpyxl.
 
 Standalone usage:
@@ -20,6 +20,13 @@ import pandas as pd
 from openpyxl import Workbook
 from openpyxl.styles import Alignment, Font, PatternFill
 from openpyxl.utils import get_column_letter
+from analytics_models import (
+    calculate_cohort_retention,
+    calculate_rfm_segments,
+    prepare_order_data,
+    run_statistical_tests,
+    validate_revenue_forecast,
+)
 
 # ---------------------------------------------------------------------------
 # Brand palette
@@ -70,7 +77,7 @@ def _write_df(ws, df: pd.DataFrame, start_row: int) -> None:
 def _autofit(ws, df: pd.DataFrame, pad: int = 4) -> None:
     for i, col in enumerate(df.columns, 1):
         header_len = len(str(col))
-        data_len = df[col].astype(str).map(len).max() if len(df) else 0
+        data_len = df[col].map(lambda val: len(str(val))).max() if len(df) else 0
         ws.column_dimensions[get_column_letter(i)].width = min(
             max(header_len, data_len) + pad, 42
         )
@@ -90,7 +97,7 @@ def _build_sheet(wb: Workbook, sheet_name: str, title: str, df: pd.DataFrame) ->
 
 def generate_report(df: pd.DataFrame, output_path: str = None):
     """
-    Build a 13-sheet Excel KPI workbook from the Swiggy orders DataFrame.
+    Build a 20-sheet Excel KPI workbook from the Swiggy orders DataFrame.
 
     Parameters
     ----------
@@ -105,40 +112,7 @@ def generate_report(df: pd.DataFrame, output_path: str = None):
     str | bytes
         File path (if output_path given) or raw bytes.
     """
-    df = df.copy()
-
-    # --- Preprocessing (idempotent — safe to run even if columns already exist) ---
-    df["Order Date"] = pd.to_datetime(df["Order Date"])
-    df["Year-Month"] = df["Order Date"].dt.to_period("M").astype(str)
-    df["Quarter"] = df["Order Date"].dt.to_period("Q").astype(str)
-    df["DayName"] = df["Order Date"].dt.day_name()
-    df["DayOfWeek"] = df["Order Date"].dt.dayofweek
-
-    df["Value_Segment"] = pd.cut(
-        df["Price (INR)"],
-        bins=[0, 200, 500, 1000, float("inf")],
-        labels=["Budget (<=200)", "Standard (201-500)", "Premium (501-1000)", "Luxury (>1000)"],
-    )
-
-    # Synthetic Order Hour — reproducible distribution (lunch + dinner peaks)
-    rng = np.random.default_rng(42)
-    hour_probs = np.array(
-        [0.005, 0.005, 0.005, 0.005, 0.005, 0.005,   # 00-05 late night
-         0.020, 0.030, 0.040,                          # 06-08 morning
-         0.040, 0.060,                                 # 09-10 brunch
-         0.100, 0.120, 0.100,                          # 11-13 lunch peak
-         0.050, 0.040, 0.030,                          # 14-16 afternoon
-         0.050, 0.060,                                 # 17-18 early evening
-         0.120, 0.120, 0.100, 0.080,                   # 19-22 dinner peak
-         0.040],                                       # 23    night
-    )
-    hour_probs = hour_probs / hour_probs.sum()
-    df["Order Hour"] = rng.choice(24, size=len(df), p=hour_probs)
-    df["Time Slot"] = pd.cut(
-        df["Order Hour"],
-        bins=[-1, 5, 10, 14, 17, 22, 23],
-        labels=["Late Night", "Morning", "Lunch", "Afternoon", "Dinner", "Night"],
-    )
+    df = prepare_order_data(df, include_synthetic_hour=True)
 
     wb = Workbook()
     wb.remove(wb.active)  # remove default blank sheet
@@ -393,6 +367,106 @@ def generate_report(df: pd.DataFrame, output_path: str = None):
         rest_df.head(100),
     )
 
+    # ── Sheet 14 : RFM Summary ────────────────────────────────────────────
+    rfm_df, rfm_summary = calculate_rfm_segments(df)
+    rfm_summary = rfm_summary.rename(
+        columns={
+            "Entities": "Restaurants",
+            "Avg_Recency_Days": "Avg Recency Days",
+            "Avg_Frequency": "Avg Frequency",
+            "Total_Revenue": "Total Revenue (INR)",
+            "Avg_RFM_Score": "Avg RFM Score",
+        }
+    )
+    _build_sheet(
+        wb,
+        "14. RFM Summary",
+        "Restaurant-Partner RFM Segment Summary",
+        rfm_summary,
+    )
+
+    # ── Sheet 15 : RFM Detail ─────────────────────────────────────────────
+    rfm_detail = rfm_df[
+        [
+            "Restaurant Name",
+            "RFM_Segment",
+            "RFM_Code",
+            "RFM_Score",
+            "Recency_Days",
+            "Frequency",
+            "Monetary",
+            "Avg_Order_Value",
+            "Avg_Rating",
+        ]
+    ].head(250)
+    rfm_detail.columns = [
+        "Restaurant",
+        "RFM Segment",
+        "RFM Code",
+        "RFM Score",
+        "Recency Days",
+        "Frequency",
+        "Revenue (INR)",
+        "Avg Order Value (INR)",
+        "Avg Rating",
+    ]
+    _build_sheet(
+        wb,
+        "15. RFM Detail",
+        "Top 250 Restaurants by RFM Score",
+        rfm_detail,
+    )
+
+    # ── Sheet 16 : Cohort Retention ───────────────────────────────────────
+    cohort_df = calculate_cohort_retention(df)
+    _build_sheet(
+        wb,
+        "16. Cohort Retention",
+        "Monthly Restaurant-Partner Cohort Retention (%)",
+        cohort_df,
+    )
+
+    # ── Sheet 17 : Statistical Tests ──────────────────────────────────────
+    tests_df = run_statistical_tests(df)
+    _build_sheet(
+        wb,
+        "17. Statistical Tests",
+        "Mann-Whitney U and ANOVA Test Results",
+        tests_df,
+    )
+
+    # ── Sheet 18-20 : Forecast Validation ─────────────────────────────────
+    validation_df, forecast_metrics, forecast_df = validate_revenue_forecast(df)
+    if validation_df.empty:
+        validation_df = pd.DataFrame(
+            [{"Status": "Not enough monthly history to validate forecast"}]
+        )
+        forecast_metrics = pd.DataFrame(
+            [{"Status": "Not enough monthly history to calculate MAPE/RMSE"}]
+        )
+        forecast_df = pd.DataFrame(
+            [{"Status": "Not enough monthly history to forecast"}]
+        )
+
+    _build_sheet(
+        wb,
+        "18. Forecast Validation",
+        "Holdout Forecast Validation by Model",
+        validation_df,
+    )
+    _build_sheet(
+        wb,
+        "19. Forecast Metrics",
+        "Forecast Accuracy: MAPE and RMSE",
+        forecast_metrics,
+    )
+    _build_sheet(
+        wb,
+        "20. Revenue Forecast",
+        "Next 3-Month Revenue Forecast",
+        forecast_df,
+    )
+
     # ── Output ────────────────────────────────────────────────────────────
     if output_path:
         wb.save(output_path)
@@ -413,4 +487,4 @@ if __name__ == "__main__":
     out_path = "swiggy_kpi_report.xlsx"
     generate_report(raw_df, output_path=out_path)
     size_kb = os.path.getsize(out_path) // 1024
-    print(f"Excel report saved: {out_path}  ({size_kb} KB, 13 sheets)")
+    print(f"Excel report saved: {out_path}  ({size_kb} KB, 20 sheets)")

@@ -14,6 +14,8 @@ import sqlite3
 import os
 import pandas as pd
 
+from analytics_models import prepare_order_data
+
 DB_PATH = "swiggy.db"
 EXCEL_PATH = "swiggy_data.xlsx"
 
@@ -21,27 +23,17 @@ EXCEL_PATH = "swiggy_data.xlsx"
 def setup_database(excel_path: str = EXCEL_PATH, db_path: str = DB_PATH) -> str:
     """
     Read swiggy_data.xlsx and load it into a SQLite database as the 'orders' table.
-    Adds derived columns (Year_Month, Quarter, DayName, DayOfWeek) before inserting.
+    Adds shared derived columns before inserting.
     Returns the path to the created database file.
     """
-    df = pd.read_excel(excel_path)
+    df = prepare_order_data(pd.read_excel(excel_path))
 
-    df["Order Date"] = pd.to_datetime(df["Order Date"])
-    df["Year_Month"] = df["Order Date"].dt.to_period("M").astype(str)
-    df["Quarter"] = df["Order Date"].dt.to_period("Q").astype(str)
+    # SQL aliases keep existing queries readable while sharing prep logic.
+    df["Year_Month"] = df["Year-Month"]
     df["Year"] = df["Order Date"].dt.year
     df["Month"] = df["Order Date"].dt.month
-    df["DayName"] = df["Order Date"].dt.day_name()
-    df["DayOfWeek"] = df["Order Date"].dt.dayofweek  # 0=Monday
-    df["Value_Segment"] = pd.cut(
-        df["Price (INR)"],
-        bins=[0, 200, 500, 1000, float("inf")],
-        labels=["Budget (<=200)", "Standard (201-500)", "Premium (501-1000)", "Luxury (>1000)"],
-    ).astype(str)
-    df["Food_Category"] = df["Dish Name"].str.lower().str.contains(
-        "chicken|mutton|fish|egg|prawn|meat|biryani|kebab|seafood|non-veg|non veg|kabab",
-        na=False,
-    ).map({True: "Non-Veg", False: "Veg"})
+    df["Value_Segment"] = df["Value_Segment"].astype(str)
+    df["Food_Category"] = df["Food Category"]
     df["Order Date"] = df["Order Date"].astype(str)  # SQLite-friendly
 
     conn = sqlite3.connect(db_path)

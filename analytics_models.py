@@ -172,6 +172,33 @@ def calculate_rfm_segments(df: pd.DataFrame, entity_col: str = ENTITY_COL) -> tu
     return rfm, summary
 
 
+def calculate_restaurant_frequency_tiers(
+    df: pd.DataFrame,
+    entity_col: str = ENTITY_COL,
+) -> pd.DataFrame:
+    """Classify restaurants into Low / Medium / High volume tiers by order count."""
+    data = prepare_order_data(df)
+    frequency = (
+        data.groupby(entity_col)
+        .agg(
+            Orders=(PRICE_COL, "count"),
+            Revenue=(PRICE_COL, "sum"),
+            Avg_Rating=("Rating", "mean"),
+            City=("City", "first"),
+            State=("State", "first"),
+        )
+        .round(2)
+        .sort_values("Orders", ascending=False)
+        .reset_index()
+    )
+    frequency["Frequency Tier"] = pd.cut(
+        frequency["Orders"].rank(pct=True),
+        bins=[0, 0.40, 0.80, 1.0],
+        labels=["Low Volume (Bottom 40%)", "Medium Volume (40-80%)", "High Volume (Top 20%)"],
+    )
+    return frequency
+
+
 def calculate_cohort_retention(df: pd.DataFrame, entity_col: str = ENTITY_COL) -> pd.DataFrame:
     """Build monthly restaurant-partner cohort retention matrix."""
     data = prepare_order_data(df)

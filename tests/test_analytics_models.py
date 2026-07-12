@@ -6,6 +6,7 @@ import pytest
 from analytics_models import (
     calculate_cohort_retention,
     calculate_rfm_segments,
+    calculate_restaurant_frequency_tiers,
     classify_food_category,
     prepare_order_data,
 )
@@ -60,6 +61,17 @@ def test_calculate_rfm_segments_returns_expected_partner_metrics() -> None:
     assert alpha["Monetary"] == 1400
     assert {"RFM_Score", "RFM_Code", "RFM_Segment"}.issubset(rfm.columns)
     assert summary["Entities"].sum() == 3
+
+
+def test_calculate_restaurant_frequency_tiers_uses_shared_40_80_split() -> None:
+    tiers = calculate_restaurant_frequency_tiers(make_orders_df())
+    by_restaurant = tiers.set_index("Restaurant Name")
+
+    assert len(tiers) == 3
+    assert by_restaurant.loc["Alpha", "Orders"] == 3
+    assert by_restaurant.loc["Alpha", "Frequency Tier"] == "High Volume (Top 20%)"
+    assert by_restaurant.loc["Beta", "Frequency Tier"] == "Low Volume (Bottom 40%)"
+    assert by_restaurant.loc["Gamma", "Frequency Tier"] == "Medium Volume (40-80%)"
 
 
 def test_calculate_cohort_retention_builds_monthly_matrix() -> None:

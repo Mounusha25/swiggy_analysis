@@ -84,7 +84,7 @@ swiggy-market-intelligence/
 │
 ├── app.py                      # Streamlit dashboard entrypoint
 ├── dashboard_ui.py             # Page layout, sidebar filters, KPIs, footer
-├── dashboard_tabs.py           # 8 dashboard tab renderers
+├── dashboard_tabs.py           # 9 dashboard tab renderers
 ├── analytics_models.py         # RFM, cohorts, statistical tests, forecast validation
 ├── swiggy_sales_analysis.ipynb # Main analysis notebook (66 cells)
 ├── sql_pipeline.py             # SQLite DB + 12 analytics queries
@@ -96,15 +96,16 @@ swiggy-market-intelligence/
 
 ---
 
-## Dashboard — 8 Tabs
+## Dashboard — 9 Tabs
 
 | Tab | Content |
 |-----|---------|
 | 📈 Overview | Revenue KPIs, quarterly performance, day-of-week patterns |
 | 🗺️ Geographic | State/city heatmaps, revenue vs rating scatter |
-| 🎯 Segments | Order-value segments, food preference heatmap, frequency tiers, time-of-day analysis |
+| 🎯 Segments | Order-value segments, food preference heatmap, frequency tiers |
 | 📉 Trends | Monthly trend + 3-month moving average, MoM growth rate |
 | 💡 Insights | Pareto 80-20 analysis, price-rating correlation, **Menu Intelligence Matrix** |
+| 🧭 Modeled Demand | Clearly separated synthetic time-of-day / peak-hour scenario |
 | 🧪 Advanced Analytics | RFM, cohort retention, Mann-Whitney U, ANOVA, ARIMA validation |
 | 🗄️ SQL Pipeline | 12 SQL queries running against a live SQLite database |
 | 📍 Expansion Strategy | **City Expansion Opportunity Index** + **Restaurant Health Score** |
@@ -203,6 +204,7 @@ jupyter notebook swiggy_sales_analysis.ipynb
 Automated tests use small synthetic fixtures, so they run quickly without the full `swiggy_data.xlsx` file:
 
 ```bash
+pip install -r requirements-dev.txt
 pytest
 ```
 
@@ -216,7 +218,7 @@ The suite covers food classification edge cases, shared data preparation, RFM se
 - **Untapped markets identified**: Several tier-2 cities score high on the Expansion Index despite low current revenue
 - **Critical restaurants flagged**: Restaurant Health Score surfaces partners below the intervention threshold
 - **Star categories**: A small number of food categories drive disproportionate revenue with high satisfaction — clear marketing priorities
-- **Demand peaks**: Lunch (11–13h) and Dinner (19–22h) dominate in the modelled time-of-day scenario; weekends slightly outperform weekdays
+- **Modeled demand peaks**: Lunch (11–13h) and Dinner (19–22h) dominate in the separated synthetic time-of-day scenario; weekends slightly outperform weekdays
 
 ---
 

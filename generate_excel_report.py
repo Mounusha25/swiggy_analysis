@@ -23,6 +23,7 @@ from openpyxl.utils import get_column_letter
 from analytics_models import (
     calculate_cohort_retention,
     calculate_rfm_segments,
+    calculate_restaurant_frequency_tiers,
     prepare_order_data,
     run_statistical_tests,
     validate_revenue_forecast,
@@ -338,22 +339,7 @@ def generate_report(df: pd.DataFrame, output_path: str = None):
     )
 
     # ── Sheet 13 : Restaurant Frequency Tiers ────────────────────────────
-    rest_df = (
-        df.groupby("Restaurant Name")
-        .agg(Orders=("Price (INR)", "count"),
-             Revenue=("Price (INR)", "sum"),
-             Avg_Rating=("Rating", "mean"),
-             City=("City", "first"),
-             State=("State", "first"))
-        .round(2)
-        .sort_values("Orders", ascending=False)
-        .reset_index()
-    )
-    rest_df["Frequency Tier"] = pd.cut(
-        rest_df["Orders"].rank(pct=True),
-        bins=[0, 0.40, 0.80, 1.0],
-        labels=["Low Volume (Bottom 40%)", "Medium Volume (40-80%)", "High Volume (Top 20%)"],
-    )
+    rest_df = calculate_restaurant_frequency_tiers(df)
     rest_df = rest_df[
         ["Restaurant Name", "City", "State", "Frequency Tier", "Orders", "Revenue", "Avg_Rating"]
     ]

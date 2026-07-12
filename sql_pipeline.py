@@ -14,7 +14,7 @@ import sqlite3
 import os
 import pandas as pd
 
-from analytics_models import prepare_order_data
+from analytics_models import calculate_restaurant_frequency_tiers, prepare_order_data
 
 DB_PATH = "swiggy.db"
 EXCEL_PATH = "swiggy_data.xlsx"
@@ -40,11 +40,14 @@ def setup_database(
     df["Value_Segment"] = df["Value_Segment"].astype(str)
     df["Food_Category"] = df["Food Category"]
     df["Order Date"] = df["Order Date"].astype(str)  # SQLite-friendly
+    restaurant_frequency = calculate_restaurant_frequency_tiers(raw_df)
 
     conn = sqlite3.connect(db_path)
     conn.execute("DROP TABLE IF EXISTS orders")
+    conn.execute("DROP TABLE IF EXISTS restaurant_frequency")
     conn.commit()
     df.to_sql("orders", conn, if_exists="replace", index=False)
+    restaurant_frequency.to_sql("restaurant_frequency", conn, if_exists="replace", index=False)
     conn.commit()
     conn.close()
 
@@ -211,28 +214,13 @@ ORDER BY MIN("Price (INR)");""",
     "Restaurant Frequency Tiers": {
         "sql": """\
 SELECT
-    Tier                                 AS "Frequency Tier",
+    "Frequency Tier",
     COUNT(*)                             AS "Restaurants",
     SUM(Orders)                          AS "Total Orders",
     ROUND(SUM(Revenue), 2)               AS "Total Revenue (INR)",
     ROUND(AVG(Avg_Rating), 3)            AS "Avg Rating"
-FROM (
-    SELECT
-        "Restaurant Name",
-        COUNT(*)                         AS Orders,
-        SUM("Price (INR)")               AS Revenue,
-        AVG(Rating)                      AS Avg_Rating,
-        CASE
-            WHEN PERCENT_RANK() OVER (ORDER BY COUNT(*)) >= 0.80
-                                         THEN 'High Volume (Top 20%)'
-            WHEN PERCENT_RANK() OVER (ORDER BY COUNT(*)) >= 0.40
-                                         THEN 'Medium Volume (40-80%)'
-            ELSE                              'Low Volume (Bottom 40%)'
-        END                              AS Tier
-    FROM orders
-    GROUP BY "Restaurant Name"
-)
-GROUP BY Tier
+FROM restaurant_frequency
+GROUP BY "Frequency Tier"
 ORDER BY MIN(Orders) DESC;""",
         "description": (
             "Classifies restaurants by order volume into High / Medium / Low tiers "

@@ -12,6 +12,7 @@ from sklearn.preprocessing import MinMaxScaler
 from analytics_models import (
     calculate_cohort_retention,
     calculate_rfm_segments,
+    calculate_restaurant_frequency_tiers,
     run_statistical_tests,
     validate_revenue_forecast,
 )
@@ -24,6 +25,7 @@ TAB_LABELS = [
     "🎯 Segments",
     "📉 Trends",
     "💡 Insights",
+    "🧭 Modeled Demand",
     "🧪 Advanced Analytics",
     "🗄️ SQL Pipeline",
     "📍 Expansion Strategy",
@@ -37,9 +39,10 @@ def render_tabs(df: pd.DataFrame, df_filtered: pd.DataFrame) -> None:
     render_segments(tabs[2], df_filtered)
     render_trends(tabs[3], df_filtered)
     render_insights(tabs[4], df_filtered)
-    render_advanced_analytics(tabs[5], df_filtered)
-    render_sql_pipeline(tabs[6], df)
-    render_expansion_strategy(tabs[7], df_filtered)
+    render_modeled_demand(tabs[5], df_filtered)
+    render_advanced_analytics(tabs[6], df_filtered)
+    render_sql_pipeline(tabs[7], df)
+    render_expansion_strategy(tabs[8], df_filtered)
 
 
 def render_overview(tab, df_filtered: pd.DataFrame) -> None:
@@ -168,13 +171,8 @@ def render_segments(tab, df_filtered: pd.DataFrame) -> None:
     with tab:
         st.markdown('<h3 class="sub-header">Customer Segmentation</h3>', unsafe_allow_html=True)
         segment_df = df_filtered.copy()
-        segment_df["Value_Segment_Display"] = pd.cut(
-            segment_df["Price (INR)"],
-            bins=[0, 200, 500, 1000, float("inf")],
-            labels=["Budget", "Standard", "Premium", "Luxury"],
-        )
         segment_analysis = (
-            segment_df.groupby("Value_Segment_Display", observed=True)
+            segment_df.groupby("Value_Segment", observed=True)
             .agg(Revenue=("Price (INR)", "sum"), Orders=("Price (INR)", "count"))
             .reset_index()
         )
@@ -183,7 +181,7 @@ def render_segments(tab, df_filtered: pd.DataFrame) -> None:
         with col1:
             fig_segment_pie = px.pie(
                 segment_analysis,
-                names="Value_Segment_Display",
+                names="Value_Segment",
                 values="Revenue",
                 title="Revenue by Order Value Segment",
                 hole=0.4,
@@ -192,7 +190,7 @@ def render_segments(tab, df_filtered: pd.DataFrame) -> None:
         with col2:
             fig_segment_orders = px.bar(
                 segment_analysis,
-                x="Value_Segment_Display",
+                x="Value_Segment",
                 y="Orders",
                 title="Order Count by Segment",
                 color="Orders",
@@ -223,16 +221,10 @@ def render_segments(tab, df_filtered: pd.DataFrame) -> None:
 
         st.markdown('<h3 class="sub-header">Purchase Frequency Segmentation</h3>', unsafe_allow_html=True)
         st.caption("Restaurants are classified by order volume as a proxy for customer visit frequency.")
-        rest_orders = df_filtered.groupby("Restaurant Name")["Price (INR)"].count().reset_index()
-        rest_orders.columns = ["Restaurant", "Orders"]
-        rest_orders["Frequency Tier"] = pd.cut(
-            rest_orders["Orders"].rank(pct=True),
-            bins=[0, 0.40, 0.80, 1.0],
-            labels=["Low Volume", "Medium Volume", "High Volume"],
-        )
+        rest_orders = calculate_restaurant_frequency_tiers(df_filtered)
         freq_summary = (
             rest_orders.groupby("Frequency Tier", observed=True)
-            .agg(Restaurants=("Restaurant", "count"), Total_Orders=("Orders", "sum"))
+            .agg(Restaurants=("Restaurant Name", "count"), Total_Orders=("Orders", "sum"))
             .reset_index()
         )
         col1, col2 = st.columns(2)
@@ -259,12 +251,20 @@ def render_segments(tab, df_filtered: pd.DataFrame) -> None:
             fig_freq_r.update_traces(texttemplate="%{text:,}", textposition="outside")
             st.plotly_chart(fig_freq_r, width="stretch")
 
+def render_modeled_demand(tab, df_filtered: pd.DataFrame) -> None:
+    with tab:
+        st.markdown('<h3 class="sub-header">Modeled Demand Scenario</h3>', unsafe_allow_html=True)
+        st.warning(
+            "Synthetic analysis: the source data has `Order Date` but no real order-hour timestamp. "
+            "The charts below use a reproducible lunch/dinner demand distribution to demonstrate "
+            "how peak-hour analysis would work if timestamp data were available."
+        )
         _render_time_of_day(df_filtered)
 
 
 def _render_time_of_day(df_filtered: pd.DataFrame) -> None:
-    st.markdown('<h3 class="sub-header">Time of Day Order Patterns</h3>', unsafe_allow_html=True)
-    st.caption("Order hours are modelled from a realistic delivery distribution (lunch + dinner peaks).")
+    st.markdown('<h3 class="sub-header">Synthetic Time-of-Day Order Patterns</h3>', unsafe_allow_html=True)
+    st.caption("Modeled from a realistic delivery distribution; not observed order-hour data.")
     slot_order = ["Morning", "Lunch", "Afternoon", "Dinner", "Night", "Late Night"]
     tod = (
         df_filtered.groupby("Time Slot", observed=True)["Price (INR)"]

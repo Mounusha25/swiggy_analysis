@@ -198,6 +198,18 @@ jupyter notebook swiggy_sales_analysis.ipynb
 
 ---
 
+## Testing & CI
+
+Automated tests use small synthetic fixtures, so they run quickly without the full `swiggy_data.xlsx` file:
+
+```bash
+pytest
+```
+
+The suite covers food classification edge cases, shared data preparation, RFM segmentation, cohort retention, and all SQL queries. GitHub Actions runs the same tests on every push and pull request via `.github/workflows/tests.yml`.
+
+---
+
 ## Key Findings
 
 - **Revenue concentration measured**: Pareto analysis identifies the exact city set needed to reach 80% of revenue

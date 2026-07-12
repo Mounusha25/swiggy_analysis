@@ -20,13 +20,18 @@ DB_PATH = "swiggy.db"
 EXCEL_PATH = "swiggy_data.xlsx"
 
 
-def setup_database(excel_path: str = EXCEL_PATH, db_path: str = DB_PATH) -> str:
+def setup_database(
+    excel_path: str = EXCEL_PATH,
+    db_path: str = DB_PATH,
+    source_df: pd.DataFrame | None = None,
+) -> str:
     """
-    Read swiggy_data.xlsx and load it into a SQLite database as the 'orders' table.
+    Read Swiggy orders from Excel or a provided DataFrame and load them into SQLite.
     Adds shared derived columns before inserting.
     Returns the path to the created database file.
     """
-    df = prepare_order_data(pd.read_excel(excel_path))
+    raw_df = source_df if source_df is not None else pd.read_excel(excel_path)
+    df = prepare_order_data(raw_df)
 
     # SQL aliases keep existing queries readable while sharing prep logic.
     df["Year_Month"] = df["Year-Month"]

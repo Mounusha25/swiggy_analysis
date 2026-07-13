@@ -86,7 +86,8 @@ swiggy-market-intelligence/
 ├── dashboard_ui.py             # Page layout, sidebar filters, KPIs, footer
 ├── dashboard_tabs.py           # 9 dashboard tab renderers
 ├── analytics_models.py         # RFM, cohorts, statistical tests, forecast validation
-├── swiggy_sales_analysis.ipynb # Main analysis notebook (66 cells)
+├── export_tableau_extracts.py  # Tableau-ready CSV export layer
+├── swiggy_sales_analysis.ipynb # Main analysis notebook
 ├── sql_pipeline.py             # SQLite DB + 12 analytics queries
 ├── generate_excel_report.py    # 20-sheet formatted Excel KPI report
 ├── swiggy_data.xlsx            # Source dataset
@@ -112,7 +113,7 @@ swiggy-market-intelligence/
 
 ---
 
-## Notebook — 66 Cells Across 13 Sections
+## Notebook — End-to-End Analysis
 
 ```
 § 0   Executive Summary
@@ -136,6 +137,26 @@ swiggy-market-intelligence/
 §11   SQL Integration Demo
 §12   Excel Report Generation
 ```
+
+---
+
+## Tableau Extract Layer
+
+Streamlit is the engineering layer for live Python analytics. Tableau is intended as a focused executive BI layer, using flat CSV extracts generated from the same tested Python functions:
+
+```bash
+python export_tableau_extracts.py
+```
+
+This writes `tableau_extracts/` with:
+
+- `orders_enriched.csv` — order rows plus `Value_Segment`, `Food Category`, `Year-Month`, `Quarter`, and `DayName`
+- `city_expansion_index.csv` — city opportunity score, inputs, and tier
+- `restaurant_health_score.csv` — restaurant health score, inputs, and tier
+- `rfm_summary.csv` / `rfm_detail.csv` — restaurant-partner RFM outputs
+- `cohort_retention.csv` — monthly restaurant-partner retention matrix
+
+Use these files in Tableau instead of rebuilding RFM, cohort, ARIMA, statistical tests, or composite indices as Tableau calculated fields.
 
 ---
 

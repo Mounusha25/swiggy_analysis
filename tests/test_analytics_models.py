@@ -4,9 +4,11 @@ import pandas as pd
 import pytest
 
 from analytics_models import (
+    calculate_city_expansion_index,
     calculate_cohort_retention,
     calculate_rfm_segments,
     calculate_restaurant_frequency_tiers,
+    calculate_restaurant_health_score,
     classify_food_category,
     prepare_order_data,
 )
@@ -72,6 +74,36 @@ def test_calculate_restaurant_frequency_tiers_uses_shared_40_80_split() -> None:
     assert by_restaurant.loc["Alpha", "Frequency Tier"] == "High Volume (Top 20%)"
     assert by_restaurant.loc["Beta", "Frequency Tier"] == "Low Volume (Bottom 40%)"
     assert by_restaurant.loc["Gamma", "Frequency Tier"] == "Medium Volume (40-80%)"
+
+
+def test_calculate_city_expansion_index_returns_expected_columns() -> None:
+    city_index = calculate_city_expansion_index(make_orders_df())
+
+    assert len(city_index) == 3
+    assert {
+        "City",
+        "Revenue",
+        "Growth_Rate",
+        "Weighted_Rating",
+        "Order_Density",
+        "Cat_Diversity",
+        "Opportunity_Score",
+        "City_Tier",
+    }.issubset(city_index.columns)
+    assert city_index["Opportunity_Score"].between(0, 100).all()
+    assert set(city_index["City_Tier"]).issubset({"Stars", "Untapped", "Emerging", "Low Priority"})
+
+
+def test_calculate_restaurant_health_score_returns_expected_columns() -> None:
+    health = calculate_restaurant_health_score(make_orders_df())
+
+    alpha = health.loc[health["Restaurant Name"] == "Alpha"].iloc[0]
+
+    assert len(health) == 3
+    assert alpha["Orders"] == 3
+    assert alpha["Revenue"] == 1400
+    assert health["Health_Score"].between(0, 100).all()
+    assert set(health["Health_Tier"]).issubset({"Champion", "Healthy", "At Risk", "Critical"})
 
 
 def test_calculate_cohort_retention_builds_monthly_matrix() -> None:

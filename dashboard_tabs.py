@@ -7,12 +7,13 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 import streamlit as st
-from sklearn.preprocessing import MinMaxScaler
 
 from analytics_models import (
+    calculate_city_expansion_index,
     calculate_cohort_retention,
     calculate_rfm_segments,
     calculate_restaurant_frequency_tiers,
+    calculate_restaurant_health_score,
     run_statistical_tests,
     validate_revenue_forecast,
 )
@@ -737,48 +738,9 @@ def _render_city_expansion(df_filtered: pd.DataFrame) -> None:
         "A 4-signal composite model (0-100): Revenue Growth (30%) + Weighted Rating (25%) "
         "+ Order Density (25%) + Category Diversity (20%)."
     )
-    analysis_df = df_filtered.copy()
-    analysis_df["_Order_Date_dt"] = pd.to_datetime(analysis_df["Order Date"])
-    mid_date = analysis_df["_Order_Date_dt"].min() + (
-        analysis_df["_Order_Date_dt"].max() - analysis_df["_Order_Date_dt"].min()
-    ) / 2
-    city_h1 = analysis_df[analysis_df["_Order_Date_dt"] < mid_date].groupby("City")["Price (INR)"].sum()
-    city_h2 = analysis_df[analysis_df["_Order_Date_dt"] >= mid_date].groupby("City")["Price (INR)"].sum()
-
-    city_agg = (
-        analysis_df.groupby("City")
-        .agg(
-            Orders=("Price (INR)", "count"),
-            Revenue=("Price (INR)", "sum"),
-            Weighted_Rating=(
-                "Rating",
-                lambda x: np.average(x, weights=analysis_df.loc[x.index, "Rating Count"].clip(lower=1)),
-            ),
-            Restaurants=("Restaurant Name", "nunique"),
-            Categories=("Category", "nunique"),
-        )
-        .reset_index()
-    )
-    city_agg["Growth_Rate"] = (
-        city_agg["City"].map(city_h2).fillna(0) / city_agg["City"].map(city_h1).replace(0, np.nan).fillna(1)
-    ) - 1
-    city_agg["Order_Density"] = city_agg["Orders"] / city_agg["Restaurants"].replace(0, np.nan)
-    city_agg["Cat_Diversity"] = city_agg["Categories"]
-
-    features = ["Growth_Rate", "Weighted_Rating", "Order_Density", "Cat_Diversity"]
-    city_agg[features] = city_agg[features].fillna(0)
-    norm = MinMaxScaler().fit_transform(city_agg[features])
-    city_agg["Opportunity_Score"] = (
-        norm[:, 0] * 0.30 + norm[:, 1] * 0.25 + norm[:, 2] * 0.25 + norm[:, 3] * 0.20
-    ) * 100
-    city_agg = city_agg.sort_values("Opportunity_Score", ascending=False).reset_index(drop=True)
-
+    city_agg = calculate_city_expansion_index(df_filtered)
     rev_med = city_agg["Revenue"].median()
     opp_med = city_agg["Opportunity_Score"].median()
-    city_agg["City_Tier"] = city_agg.apply(
-        lambda row: _city_quadrant(row, revenue_median=rev_med, opportunity_median=opp_med),
-        axis=1,
-    )
 
     fig_a1 = px.scatter(
         city_agg,
@@ -825,55 +787,12 @@ def _render_city_expansion(df_filtered: pd.DataFrame) -> None:
         )
 
 
-def _city_quadrant(row: pd.Series, revenue_median: float, opportunity_median: float) -> str:
-    hi_rev = row["Revenue"] >= revenue_median
-    hi_opp = row["Opportunity_Score"] >= opportunity_median
-    if hi_rev and hi_opp:
-        return "Stars"
-    if not hi_rev and hi_opp:
-        return "Untapped"
-    if hi_rev:
-        return "Emerging"
-    return "Low Priority"
-
-
 def _render_restaurant_health(df_filtered: pd.DataFrame) -> None:
     st.markdown('<h3 class="sub-header">🏥 Restaurant Health Score</h3>', unsafe_allow_html=True)
     st.caption(
         "Composite viability score (0-100): Revenue 40% + Rating 30% + Orders 20% + Recency 10%."
     )
-    analysis_df = df_filtered.copy()
-    analysis_df["_Order_Date_dt"] = pd.to_datetime(analysis_df["Order Date"])
-    snapshot_date = analysis_df["_Order_Date_dt"].max() + pd.Timedelta(days=1)
-
-    rest_agg = (
-        analysis_df.groupby("Restaurant Name")
-        .agg(
-            Revenue=("Price (INR)", "sum"),
-            Orders=("Price (INR)", "count"),
-            Weighted_Rating=(
-                "Rating",
-                lambda x: np.average(x, weights=analysis_df.loc[x.index, "Rating Count"].clip(lower=1)),
-            ),
-            Last_Order=("_Order_Date_dt", "max"),
-        )
-        .reset_index()
-    )
-    rest_agg["Revenue_Share"] = rest_agg["Revenue"] / rest_agg["Revenue"].sum() * 100
-    rest_agg["Recency_Days"] = (snapshot_date - rest_agg["Last_Order"]).dt.days
-
-    scaler = MinMaxScaler()
-    rest_agg[["Rev_N", "Rating_N", "Orders_N"]] = scaler.fit_transform(
-        rest_agg[["Revenue_Share", "Weighted_Rating", "Orders"]]
-    )
-    rest_agg["Recency_N"] = 1 - scaler.fit_transform(rest_agg[["Recency_Days"]])
-    rest_agg["Health_Score"] = (
-        rest_agg["Rev_N"] * 0.40
-        + rest_agg["Rating_N"] * 0.30
-        + rest_agg["Orders_N"] * 0.20
-        + rest_agg["Recency_N"] * 0.10
-    ) * 100
-    rest_agg["Health_Tier"] = rest_agg["Health_Score"].apply(_health_tier)
+    rest_agg = calculate_restaurant_health_score(df_filtered)
 
     col1, col2 = st.columns(2)
     with col1:
@@ -917,13 +836,3 @@ def _render_restaurant_health(df_filtered: pd.DataFrame) -> None:
         title="Restaurant Health Tier Distribution",
     )
     st.plotly_chart(fig_tier, width="stretch")
-
-
-def _health_tier(score: float) -> str:
-    if score >= 75:
-        return "Champion"
-    if score >= 50:
-        return "Healthy"
-    if score >= 25:
-        return "At Risk"
-    return "Critical"

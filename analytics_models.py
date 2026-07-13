@@ -13,6 +13,7 @@ import warnings
 import numpy as np
 import pandas as pd
 from scipy import stats
+from sklearn.preprocessing import MinMaxScaler
 from statsmodels.tsa.arima.model import ARIMA
 
 
@@ -197,6 +198,117 @@ def calculate_restaurant_frequency_tiers(
         labels=["Low Volume (Bottom 40%)", "Medium Volume (40-80%)", "High Volume (Top 20%)"],
     )
     return frequency
+
+
+def calculate_city_expansion_index(df: pd.DataFrame) -> pd.DataFrame:
+    """Calculate the City Expansion Opportunity Index used by Streamlit/Tableau."""
+    data = prepare_order_data(df)
+    if data.empty:
+        return pd.DataFrame()
+
+    mid_date = data[DATE_COL].min() + (data[DATE_COL].max() - data[DATE_COL].min()) / 2
+    city_h1 = data[data[DATE_COL] < mid_date].groupby("City")[PRICE_COL].sum()
+    city_h2 = data[data[DATE_COL] >= mid_date].groupby("City")[PRICE_COL].sum()
+
+    city_agg = (
+        data.groupby("City")
+        .agg(
+            Orders=(PRICE_COL, "count"),
+            Revenue=(PRICE_COL, "sum"),
+            Weighted_Rating=(
+                "Rating",
+                lambda x: np.average(x, weights=data.loc[x.index, "Rating Count"].clip(lower=1)),
+            ),
+            Restaurants=(ENTITY_COL, "nunique"),
+            Categories=("Category", "nunique"),
+        )
+        .reset_index()
+    )
+    city_agg["Growth_Rate"] = (
+        city_agg["City"].map(city_h2).fillna(0)
+        / city_agg["City"].map(city_h1).replace(0, np.nan).fillna(1)
+    ) - 1
+    city_agg["Order_Density"] = city_agg["Orders"] / city_agg["Restaurants"].replace(0, np.nan)
+    city_agg["Cat_Diversity"] = city_agg["Categories"]
+
+    features = ["Growth_Rate", "Weighted_Rating", "Order_Density", "Cat_Diversity"]
+    city_agg[features] = city_agg[features].fillna(0)
+    norm = MinMaxScaler().fit_transform(city_agg[features])
+    city_agg["Opportunity_Score"] = (
+        norm[:, 0] * 0.30 + norm[:, 1] * 0.25 + norm[:, 2] * 0.25 + norm[:, 3] * 0.20
+    ) * 100
+
+    rev_med = city_agg["Revenue"].median()
+    opp_med = city_agg["Opportunity_Score"].median()
+    city_agg["City_Tier"] = city_agg.apply(
+        lambda row: _city_quadrant(row, revenue_median=rev_med, opportunity_median=opp_med),
+        axis=1,
+    )
+
+    return city_agg.sort_values("Opportunity_Score", ascending=False).reset_index(drop=True)
+
+
+def _city_quadrant(row: pd.Series, revenue_median: float, opportunity_median: float) -> str:
+    hi_rev = row["Revenue"] >= revenue_median
+    hi_opp = row["Opportunity_Score"] >= opportunity_median
+    if hi_rev and hi_opp:
+        return "Stars"
+    if not hi_rev and hi_opp:
+        return "Untapped"
+    if hi_rev:
+        return "Emerging"
+    return "Low Priority"
+
+
+def calculate_restaurant_health_score(df: pd.DataFrame) -> pd.DataFrame:
+    """Calculate restaurant health scores used by Streamlit/Tableau."""
+    data = prepare_order_data(df)
+    if data.empty:
+        return pd.DataFrame()
+
+    snapshot_date = data[DATE_COL].max() + pd.Timedelta(days=1)
+    rest_agg = (
+        data.groupby(ENTITY_COL)
+        .agg(
+            Revenue=(PRICE_COL, "sum"),
+            Orders=(PRICE_COL, "count"),
+            Weighted_Rating=(
+                "Rating",
+                lambda x: np.average(x, weights=data.loc[x.index, "Rating Count"].clip(lower=1)),
+            ),
+            Last_Order=(DATE_COL, "max"),
+            City=("City", "first"),
+            State=("State", "first"),
+        )
+        .reset_index()
+    )
+    rest_agg["Revenue_Share"] = rest_agg["Revenue"] / rest_agg["Revenue"].sum() * 100
+    rest_agg["Recency_Days"] = (snapshot_date - rest_agg["Last_Order"]).dt.days
+
+    scaler = MinMaxScaler()
+    rest_agg[["Rev_N", "Rating_N", "Orders_N"]] = scaler.fit_transform(
+        rest_agg[["Revenue_Share", "Weighted_Rating", "Orders"]]
+    )
+    rest_agg["Recency_N"] = 1 - scaler.fit_transform(rest_agg[["Recency_Days"]])
+    rest_agg["Health_Score"] = (
+        rest_agg["Rev_N"] * 0.40
+        + rest_agg["Rating_N"] * 0.30
+        + rest_agg["Orders_N"] * 0.20
+        + rest_agg["Recency_N"] * 0.10
+    ) * 100
+    rest_agg["Health_Tier"] = rest_agg["Health_Score"].apply(_health_tier)
+
+    return rest_agg.sort_values("Health_Score", ascending=False).reset_index(drop=True)
+
+
+def _health_tier(score: float) -> str:
+    if score >= 75:
+        return "Champion"
+    if score >= 50:
+        return "Healthy"
+    if score >= 25:
+        return "At Risk"
+    return "Critical"
 
 
 def calculate_cohort_retention(df: pd.DataFrame, entity_col: str = ENTITY_COL) -> pd.DataFrame:

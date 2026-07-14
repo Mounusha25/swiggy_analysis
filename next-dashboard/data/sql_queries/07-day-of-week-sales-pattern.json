@@ -1,0 +1,50 @@
+{
+  "name": "Day of Week Sales Pattern",
+  "slug": "day-of-week-sales-pattern",
+  "description": "Reveals weekly seasonality to optimise staffing, promotions, and delivery capacity by day of week.",
+  "sql": "SELECT\n    DayName                              AS \"Day\",\n    COUNT(*)                             AS \"Orders\",\n    ROUND(SUM(\"Price (INR)\"), 2)         AS \"Revenue (INR)\",\n    ROUND(AVG(\"Price (INR)\"), 2)         AS \"Avg Order Value (INR)\"\nFROM orders\nGROUP BY DayName, DayOfWeek\nORDER BY DayOfWeek;",
+  "rows": [
+    {
+      "Day": "Monday",
+      "Orders": 27571,
+      "Revenue (INR)": 7445437.01,
+      "Avg Order Value (INR)": 270.05
+    },
+    {
+      "Day": "Tuesday",
+      "Orders": 27415,
+      "Revenue (INR)": 7359414.01,
+      "Avg Order Value (INR)": 268.44
+    },
+    {
+      "Day": "Wednesday",
+      "Orders": 28287,
+      "Revenue (INR)": 7542103.06,
+      "Avg Order Value (INR)": 266.63
+    },
+    {
+      "Day": "Thursday",
+      "Orders": 28457,
+      "Revenue (INR)": 7664619.49,
+      "Avg Order Value (INR)": 269.34
+    },
+    {
+      "Day": "Friday",
+      "Orders": 28288,
+      "Revenue (INR)": 7579992.78,
+      "Avg Order Value (INR)": 267.96
+    },
+    {
+      "Day": "Saturday",
+      "Orders": 28938,
+      "Revenue (INR)": 7782935.4,
+      "Avg Order Value (INR)": 268.95
+    },
+    {
+      "Day": "Sunday",
+      "Orders": 28474,
+      "Revenue (INR)": 7638004.02,
+      "Avg Order Value (INR)": 268.24
+    }
+  ]
+}

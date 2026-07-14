@@ -1,0 +1,64 @@
+{
+  "name": "Monthly Revenue & Seasonality",
+  "slug": "monthly-revenue-seasonality",
+  "description": "Tracks revenue and order volume month over month to identify seasonality patterns and improve sales forecasting.",
+  "sql": "SELECT\n    Year_Month                           AS \"Month\",\n    COUNT(*)                             AS \"Orders\",\n    ROUND(SUM(\"Price (INR)\"), 2)         AS \"Revenue (INR)\",\n    ROUND(AVG(\"Price (INR)\"), 2)         AS \"Avg Order Value (INR)\",\n    ROUND(AVG(Rating), 3)                AS \"Avg Rating\"\nFROM orders\nGROUP BY Year_Month\nORDER BY Year_Month;",
+  "rows": [
+    {
+      "Month": "2025-01",
+      "Orders": 25398,
+      "Revenue (INR)": 6825186.03,
+      "Avg Order Value (INR)": 268.73,
+      "Avg Rating": 4.344
+    },
+    {
+      "Month": "2025-02",
+      "Orders": 23296,
+      "Revenue (INR)": 6269105.67,
+      "Avg Order Value (INR)": 269.11,
+      "Avg Rating": 4.337
+    },
+    {
+      "Month": "2025-03",
+      "Orders": 24402,
+      "Revenue (INR)": 6573530.07,
+      "Avg Order Value (INR)": 269.38,
+      "Avg Rating": 4.346
+    },
+    {
+      "Month": "2025-04",
+      "Orders": 24588,
+      "Revenue (INR)": 6594515.0,
+      "Avg Order Value (INR)": 268.2,
+      "Avg Rating": 4.338
+    },
+    {
+      "Month": "2025-05",
+      "Orders": 25190,
+      "Revenue (INR)": 6793558.4,
+      "Avg Order Value (INR)": 269.69,
+      "Avg Rating": 4.341
+    },
+    {
+      "Month": "2025-06",
+      "Orders": 24385,
+      "Revenue (INR)": 6514183.19,
+      "Avg Order Value (INR)": 267.14,
+      "Avg Rating": 4.341
+    },
+    {
+      "Month": "2025-07",
+      "Orders": 24940,
+      "Revenue (INR)": 6650965.51,
+      "Avg Order Value (INR)": 266.68,
+      "Avg Rating": 4.341
+    },
+    {
+      "Month": "2025-08",
+      "Orders": 25231,
+      "Revenue (INR)": 6791461.9,
+      "Avg Order Value (INR)": 269.17,
+      "Avg Rating": 4.344
+    }
+  ]
+}

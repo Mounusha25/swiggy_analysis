@@ -134,7 +134,12 @@ dmypy.json
 Thumbs.db
 
 # Project specific
+node_modules/
+.next/
+next-dashboard/node_modules/
+next-dashboard/.next/
 *.xlsx
 *.csv
 *.db
+!next-dashboard/data/*.csv
 .ipynb_checkpoints/

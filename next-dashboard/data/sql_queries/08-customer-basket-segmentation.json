@@ -1,0 +1,36 @@
+{
+  "name": "Customer Basket Segmentation",
+  "slug": "customer-basket-segmentation",
+  "description": "Segments orders by basket value (Budget / Standard / Premium / Luxury) to identify high-value customer tiers for retention campaigns.",
+  "sql": "SELECT\n    CASE\n        WHEN \"Price (INR)\" <= 200              THEN 'Budget (<=200)'\n        WHEN \"Price (INR)\" <= 500              THEN 'Standard (201-500)'\n        WHEN \"Price (INR)\" <= 1000             THEN 'Premium (501-1000)'\n        ELSE                                        'Luxury (>1000)'\n    END                                      AS \"Segment\",\n    COUNT(*)                                 AS \"Orders\",\n    ROUND(SUM(\"Price (INR)\"), 2)             AS \"Revenue (INR)\",\n    ROUND(AVG(\"Price (INR)\"), 2)             AS \"Avg Order Value (INR)\",\n    ROUND(AVG(Rating), 2)                    AS \"Avg Rating\"\nFROM orders\nGROUP BY Segment\nORDER BY MIN(\"Price (INR)\");",
+  "rows": [
+    {
+      "Segment": "Budget (<=200)",
+      "Orders": 85089,
+      "Revenue (INR)": 10708322.94,
+      "Avg Order Value (INR)": 125.85,
+      "Avg Rating": 4.34
+    },
+    {
+      "Segment": "Standard (201-500)",
+      "Orders": 96838,
+      "Revenue (INR)": 29907877.31,
+      "Avg Order Value (INR)": 308.84,
+      "Avg Rating": 4.34
+    },
+    {
+      "Segment": "Premium (501-1000)",
+      "Orders": 13234,
+      "Revenue (INR)": 8869720.13,
+      "Avg Order Value (INR)": 670.22,
+      "Avg Rating": 4.38
+    },
+    {
+      "Segment": "Luxury (>1000)",
+      "Orders": 2269,
+      "Revenue (INR)": 3526585.39,
+      "Avg Order Value (INR)": 1554.25,
+      "Avg Rating": 4.42
+    }
+  ]
+}

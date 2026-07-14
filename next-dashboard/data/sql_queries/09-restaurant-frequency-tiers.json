@@ -1,0 +1,29 @@
+{
+  "name": "Restaurant Frequency Tiers",
+  "slug": "restaurant-frequency-tiers",
+  "description": "Classifies restaurants by order volume into High / Medium / Low tiers as a proxy for purchase frequency segmentation.",
+  "sql": "SELECT\n    \"Frequency Tier\",\n    COUNT(*)                             AS \"Restaurants\",\n    SUM(Orders)                          AS \"Total Orders\",\n    ROUND(SUM(Revenue), 2)               AS \"Total Revenue (INR)\",\n    ROUND(AVG(Avg_Rating), 3)            AS \"Avg Rating\"\nFROM restaurant_frequency\nGROUP BY \"Frequency Tier\"\nORDER BY MIN(Orders) DESC;",
+  "rows": [
+    {
+      "Frequency Tier": "High Volume (Top 20%)",
+      "Restaurants": 199,
+      "Total Orders": 140302,
+      "Total Revenue (INR)": 39178289.02,
+      "Avg Rating": 4.351
+    },
+    {
+      "Frequency Tier": "Medium Volume (40-80%)",
+      "Restaurants": 399,
+      "Total Orders": 43628,
+      "Total Revenue (INR)": 10780303.51,
+      "Avg Rating": 4.327
+    },
+    {
+      "Frequency Tier": "Low Volume (Bottom 40%)",
+      "Restaurants": 395,
+      "Total Orders": 13500,
+      "Total Revenue (INR)": 3053913.24,
+      "Avg Rating": 4.355
+    }
+  ]
+}

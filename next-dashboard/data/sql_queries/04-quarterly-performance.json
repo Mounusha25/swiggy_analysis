@@ -1,0 +1,29 @@
+{
+  "name": "Quarterly Performance",
+  "slug": "quarterly-performance",
+  "description": "Aggregates sales by quarter for executive-level period-over-period comparison and seasonal planning.",
+  "sql": "SELECT\n    Quarter,\n    COUNT(*)                             AS \"Orders\",\n    ROUND(SUM(\"Price (INR)\"), 2)         AS \"Revenue (INR)\",\n    ROUND(AVG(\"Price (INR)\"), 2)         AS \"Avg Order Value (INR)\",\n    ROUND(AVG(Rating), 3)                AS \"Avg Rating\"\nFROM orders\nGROUP BY Quarter\nORDER BY Quarter;",
+  "rows": [
+    {
+      "Quarter": "2025Q1",
+      "Orders": 73096,
+      "Revenue (INR)": 19667821.77,
+      "Avg Order Value (INR)": 269.07,
+      "Avg Rating": 4.343
+    },
+    {
+      "Quarter": "2025Q2",
+      "Orders": 74163,
+      "Revenue (INR)": 19902256.59,
+      "Avg Order Value (INR)": 268.36,
+      "Avg Rating": 4.34
+    },
+    {
+      "Quarter": "2025Q3",
+      "Orders": 50171,
+      "Revenue (INR)": 13442427.41,
+      "Avg Order Value (INR)": 267.93,
+      "Avg Rating": 4.342
+    }
+  ]
+}

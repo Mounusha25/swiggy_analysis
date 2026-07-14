@@ -1,0 +1,4 @@
+Model,MAPE (%),RMSE,Holdout Months
+3-Month Moving Average,1.29,111920.18,2
+"ARIMA(1,1,1)",2.14,181145.13,2
+Naive Baseline,3.07,218623.98,2

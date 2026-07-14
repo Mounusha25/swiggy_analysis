@@ -1,0 +1,74 @@
+[
+  {
+    "name": "Monthly Revenue & Seasonality",
+    "slug": "monthly-revenue-seasonality",
+    "file": "01-monthly-revenue-seasonality.json",
+    "description": "Tracks revenue and order volume month over month to identify seasonality patterns and improve sales forecasting."
+  },
+  {
+    "name": "Revenue by State",
+    "slug": "revenue-by-state",
+    "file": "02-revenue-by-state.json",
+    "description": "Ranks states by total revenue to identify top-performing geographic markets for targeted marketing investment."
+  },
+  {
+    "name": "Revenue by Food Category",
+    "slug": "revenue-by-food-category",
+    "file": "03-revenue-by-food-category.json",
+    "description": "Breaks down revenue by cuisine category to reveal high-value food segments and guide menu strategy."
+  },
+  {
+    "name": "Quarterly Performance",
+    "slug": "quarterly-performance",
+    "file": "04-quarterly-performance.json",
+    "description": "Aggregates sales by quarter for executive-level period-over-period comparison and seasonal planning."
+  },
+  {
+    "name": "Top 20 Dishes by Revenue",
+    "slug": "top-20-dishes-by-revenue",
+    "file": "05-top-20-dishes-by-revenue.json",
+    "description": "Identifies highest-revenue dishes to inform menu optimisation, promotions, and restaurant partnership decisions."
+  },
+  {
+    "name": "Top 20 Restaurants by Revenue",
+    "slug": "top-20-restaurants-by-revenue",
+    "file": "06-top-20-restaurants-by-revenue.json",
+    "description": "Highlights top-performing restaurant partners by revenue for strategic account management and co-marketing opportunities."
+  },
+  {
+    "name": "Day of Week Sales Pattern",
+    "slug": "day-of-week-sales-pattern",
+    "file": "07-day-of-week-sales-pattern.json",
+    "description": "Reveals weekly seasonality to optimise staffing, promotions, and delivery capacity by day of week."
+  },
+  {
+    "name": "Customer Basket Segmentation",
+    "slug": "customer-basket-segmentation",
+    "file": "08-customer-basket-segmentation.json",
+    "description": "Segments orders by basket value (Budget / Standard / Premium / Luxury) to identify high-value customer tiers for retention campaigns."
+  },
+  {
+    "name": "Restaurant Frequency Tiers",
+    "slug": "restaurant-frequency-tiers",
+    "file": "09-restaurant-frequency-tiers.json",
+    "description": "Classifies restaurants by order volume into High / Medium / Low tiers as a proxy for purchase frequency segmentation."
+  },
+  {
+    "name": "Pareto: Cities Driving 80% Revenue",
+    "slug": "pareto-cities-driving-80-revenue",
+    "file": "10-pareto-cities-driving-80-revenue.json",
+    "description": "Identifies the minimum set of cities that together generate 80% of total revenue (Pareto / 80-20 rule)."
+  },
+  {
+    "name": "Restaurant RFM Segmentation",
+    "slug": "restaurant-rfm-segmentation",
+    "file": "11-restaurant-rfm-segmentation.json",
+    "description": "Implements restaurant-partner RFM scoring in SQL using recency, frequency, and monetary value as account-retention signals."
+  },
+  {
+    "name": "Restaurant Cohort Retention",
+    "slug": "restaurant-cohort-retention",
+    "file": "12-restaurant-cohort-retention.json",
+    "description": "Builds monthly restaurant-partner cohorts and measures the share that remains active in each later month."
+  }
+]

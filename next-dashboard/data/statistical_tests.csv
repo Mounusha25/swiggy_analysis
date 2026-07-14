@@ -1,0 +1,6 @@
+Test,Metric,Groups Compared,Statistic,P-Value,Significant at 5%,Interpretation
+Mann-Whitney U,Price (INR),Veg vs Non-Veg,2333483416.5,0.0,Yes,Statistically significant difference detected
+Mann-Whitney U,Rating,Veg vs Non-Veg,3866331132.5,0.0,Yes,Statistically significant difference detected
+One-Way ANOVA,Price (INR),Budget / Standard / Premium / Luxury,297105.1884,0.0,Yes,Statistically significant difference detected
+One-Way ANOVA,Rating,Budget / Standard / Premium / Luxury,73.1578,0.0,Yes,Statistically significant difference detected
+One-Way ANOVA,Rating,Cities with 30+ orders,71.6389,0.0,Yes,Statistically significant difference detected

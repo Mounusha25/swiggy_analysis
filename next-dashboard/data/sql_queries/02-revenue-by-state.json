@@ -1,0 +1,113 @@
+{
+  "name": "Revenue by State",
+  "slug": "revenue-by-state",
+  "description": "Ranks states by total revenue to identify top-performing geographic markets for targeted marketing investment.",
+  "sql": "SELECT\n    State,\n    COUNT(*)                             AS \"Orders\",\n    ROUND(SUM(\"Price (INR)\"), 2)         AS \"Revenue (INR)\",\n    ROUND(AVG(\"Price (INR)\"), 2)         AS \"Avg Order Value (INR)\",\n    ROUND(AVG(Rating), 3)                AS \"Avg Rating\"\nFROM orders\nGROUP BY State\nORDER BY \"Revenue (INR)\" DESC\nLIMIT 15;",
+  "rows": [
+    {
+      "State": "Karnataka",
+      "Orders": 20077,
+      "Revenue (INR)": 5456798.41,
+      "Avg Order Value (INR)": 271.79,
+      "Avg Rating": 4.309
+    },
+    {
+      "State": "Uttar Pradesh",
+      "Orders": 10192,
+      "Revenue (INR)": 3117359.65,
+      "Avg Order Value (INR)": 305.86,
+      "Avg Rating": 4.375
+    },
+    {
+      "State": "Telangana",
+      "Orders": 10309,
+      "Revenue (INR)": 3021711.62,
+      "Avg Order Value (INR)": 293.11,
+      "Avg Rating": 4.274
+    },
+    {
+      "State": "Maharashtra",
+      "Orders": 10507,
+      "Revenue (INR)": 3015573.35,
+      "Avg Order Value (INR)": 287.01,
+      "Avg Rating": 4.342
+    },
+    {
+      "State": "Delhi",
+      "Orders": 10191,
+      "Revenue (INR)": 2829180.6,
+      "Avg Order Value (INR)": 277.62,
+      "Avg Rating": 4.343
+    },
+    {
+      "State": "Gujarat",
+      "Orders": 10185,
+      "Revenue (INR)": 2817836.02,
+      "Avg Order Value (INR)": 276.67,
+      "Avg Rating": 4.385
+    },
+    {
+      "State": "Punjab",
+      "Orders": 10065,
+      "Revenue (INR)": 2809440.69,
+      "Avg Order Value (INR)": 279.13,
+      "Avg Rating": 4.344
+    },
+    {
+      "State": "West Bengal",
+      "Orders": 10046,
+      "Revenue (INR)": 2662801.76,
+      "Avg Order Value (INR)": 265.06,
+      "Avg Rating": 4.411
+    },
+    {
+      "State": "Tamil Nadu",
+      "Orders": 10042,
+      "Revenue (INR)": 2642594.63,
+      "Avg Order Value (INR)": 263.15,
+      "Avg Rating": 4.365
+    },
+    {
+      "State": "Rajasthan",
+      "Orders": 10286,
+      "Revenue (INR)": 2502932.61,
+      "Avg Order Value (INR)": 243.33,
+      "Avg Rating": 4.336
+    },
+    {
+      "State": "Madhya Pradesh",
+      "Orders": 7476,
+      "Revenue (INR)": 1970100.77,
+      "Avg Order Value (INR)": 263.52,
+      "Avg Rating": 4.338
+    },
+    {
+      "State": "Goa",
+      "Orders": 5030,
+      "Revenue (INR)": 1539479.41,
+      "Avg Order Value (INR)": 306.06,
+      "Avg Rating": 4.385
+    },
+    {
+      "State": "Haryana",
+      "Orders": 5005,
+      "Revenue (INR)": 1438455.54,
+      "Avg Order Value (INR)": 287.4,
+      "Avg Rating": 4.345
+    },
+    {
+      "State": "Meghalaya",
+      "Orders": 5183,
+      "Revenue (INR)": 1427851.75,
+      "Avg Order Value (INR)": 275.49,
+      "Avg Rating": 4.336
+    },
+    {
+      "State": "Himachal Pradesh",
+      "Orders": 5054,
+      "Revenue (INR)": 1382689.18,
+      "Avg Order Value (INR)": 273.58,
+      "Avg Rating": 4.342
+    }
+  ]
+}

@@ -17,6 +17,8 @@ from analytics_models import (
     calculate_restaurant_health_score,
     calculate_rfm_segments,
     prepare_order_data,
+    run_statistical_tests,
+    validate_revenue_forecast,
 )
 
 
@@ -38,6 +40,8 @@ def export_tableau_extracts(
     restaurant_health = calculate_restaurant_health_score(raw_df)
     rfm_detail, rfm_summary = calculate_rfm_segments(raw_df)
     cohort_retention = calculate_cohort_retention(raw_df)
+    statistical_tests = run_statistical_tests(raw_df)
+    forecast_validation, forecast_metrics, revenue_forecast = validate_revenue_forecast(raw_df)
 
     extracts = {
         "orders_enriched.csv": orders_enriched,
@@ -46,6 +50,10 @@ def export_tableau_extracts(
         "rfm_summary.csv": rfm_summary,
         "rfm_detail.csv": rfm_detail,
         "cohort_retention.csv": cohort_retention,
+        "statistical_tests.csv": statistical_tests,
+        "forecast_validation.csv": forecast_validation,
+        "forecast_metrics.csv": forecast_metrics,
+        "revenue_forecast.csv": revenue_forecast,
     }
 
     written_paths: dict[str, Path] = {}

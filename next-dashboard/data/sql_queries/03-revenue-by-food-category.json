@@ -1,0 +1,148 @@
+{
+  "name": "Revenue by Food Category",
+  "slug": "revenue-by-food-category",
+  "description": "Breaks down revenue by cuisine category to reveal high-value food segments and guide menu strategy.",
+  "sql": "SELECT\n    Category                             AS \"Food Category\",\n    COUNT(*)                             AS \"Orders\",\n    ROUND(SUM(\"Price (INR)\"), 2)         AS \"Revenue (INR)\",\n    ROUND(AVG(\"Price (INR)\"), 2)         AS \"Avg Order Value (INR)\",\n    ROUND(AVG(Rating), 3)                AS \"Avg Rating\"\nFROM orders\nGROUP BY Category\nORDER BY \"Revenue (INR)\" DESC\nLIMIT 20;",
+  "rows": [
+    {
+      "Food Category": "Recommended",
+      "Orders": 24100,
+      "Revenue (INR)": 7188936.53,
+      "Avg Order Value (INR)": 298.3,
+      "Avg Rating": 4.322
+    },
+    {
+      "Food Category": "Main Course",
+      "Orders": 2959,
+      "Revenue (INR)": 760045.0,
+      "Avg Order Value (INR)": 256.86,
+      "Avg Rating": 4.311
+    },
+    {
+      "Food Category": "Burger Combos ( 3 Pc Meals )",
+      "Orders": 1331,
+      "Revenue (INR)": 507773.55,
+      "Avg Order Value (INR)": 381.5,
+      "Avg Rating": 4.378
+    },
+    {
+      "Food Category": "McSaver Combos (2 Pc Meals)",
+      "Orders": 1885,
+      "Revenue (INR)": 431696.65,
+      "Avg Order Value (INR)": 229.02,
+      "Avg Rating": 4.414
+    },
+    {
+      "Food Category": "Desserts",
+      "Orders": 2944,
+      "Revenue (INR)": 416311.28,
+      "Avg Order Value (INR)": 141.41,
+      "Avg Rating": 4.367
+    },
+    {
+      "Food Category": "Korean Spicy Fest(Limited Time Only)",
+      "Orders": 1180,
+      "Revenue (INR)": 405191.0,
+      "Avg Order Value (INR)": 343.38,
+      "Avg Rating": 4.364
+    },
+    {
+      "Food Category": "Starters",
+      "Orders": 1673,
+      "Revenue (INR)": 398756.0,
+      "Avg Order Value (INR)": 238.35,
+      "Avg Rating": 4.304
+    },
+    {
+      "Food Category": "Freshly Scooped Tubs",
+      "Orders": 952,
+      "Revenue (INR)": 394286.0,
+      "Avg Order Value (INR)": 414.17,
+      "Avg Rating": 4.406
+    },
+    {
+      "Food Category": "Sweets",
+      "Orders": 1715,
+      "Revenue (INR)": 387800.4,
+      "Avg Order Value (INR)": 226.12,
+      "Avg Rating": 4.464
+    },
+    {
+      "Food Category": "Exclusive Deals (Save upto 40%)",
+      "Orders": 1717,
+      "Revenue (INR)": 383369.28,
+      "Avg Order Value (INR)": 223.28,
+      "Avg Rating": 4.349
+    },
+    {
+      "Food Category": "BURGERS",
+      "Orders": 1238,
+      "Revenue (INR)": 370865.17,
+      "Avg Order Value (INR)": 299.57,
+      "Avg Rating": 4.293
+    },
+    {
+      "Food Category": "Cake",
+      "Orders": 384,
+      "Revenue (INR)": 366868.0,
+      "Avg Order Value (INR)": 955.39,
+      "Avg Rating": 4.467
+    },
+    {
+      "Food Category": "Group Sharing Combos",
+      "Orders": 661,
+      "Revenue (INR)": 342610.99,
+      "Avg Order Value (INR)": 518.32,
+      "Avg Rating": 4.417
+    },
+    {
+      "Food Category": "DOTD",
+      "Orders": 1307,
+      "Revenue (INR)": 340865.0,
+      "Avg Order Value (INR)": 260.8,
+      "Avg Rating": 4.314
+    },
+    {
+      "Food Category": "Thin n Crispy Pizzas",
+      "Orders": 411,
+      "Revenue (INR)": 327939.0,
+      "Avg Order Value (INR)": 797.91,
+      "Avg Rating": 4.154
+    },
+    {
+      "Food Category": "Burgers",
+      "Orders": 1301,
+      "Revenue (INR)": 324284.31,
+      "Avg Order Value (INR)": 249.26,
+      "Avg Rating": 4.355
+    },
+    {
+      "Food Category": "Kings Collection ( Premium Burgers )",
+      "Orders": 860,
+      "Revenue (INR)": 313904.54,
+      "Avg Order Value (INR)": 365.01,
+      "Avg Rating": 4.36
+    },
+    {
+      "Food Category": "Veg Pizza",
+      "Orders": 1085,
+      "Revenue (INR)": 307999.0,
+      "Avg Order Value (INR)": 283.87,
+      "Avg Rating": 4.106
+    },
+    {
+      "Food Category": "Non Veg Pizza",
+      "Orders": 847,
+      "Revenue (INR)": 300166.0,
+      "Avg Order Value (INR)": 354.39,
+      "Avg Rating": 4.243
+    },
+    {
+      "Food Category": "Cakes",
+      "Orders": 398,
+      "Revenue (INR)": 286871.27,
+      "Avg Order Value (INR)": 720.78,
+      "Avg Rating": 4.422
+    }
+  ]
+}

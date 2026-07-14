@@ -1,0 +1,17 @@
+[
+  {"category":"Main Course","revenueShare":12.39,"weightedRating":4.29,"quadrant":"Cash Cows"},
+  {"category":"Burger","revenueShare":11.87,"weightedRating":4.38,"quadrant":"Stars"},
+  {"category":"Cake","revenueShare":10.56,"weightedRating":4.57,"quadrant":"Stars"},
+  {"category":"Desserts","revenueShare":8.09,"weightedRating":4.39,"quadrant":"Stars"},
+  {"category":"Sweets","revenueShare":7.67,"weightedRating":4.51,"quadrant":"Stars"},
+  {"category":"Roll","revenueShare":7.24,"weightedRating":4.24,"quadrant":"Cash Cows"},
+  {"category":"Starters","revenueShare":6.59,"weightedRating":4.30,"quadrant":"Stars"},
+  {"category":"Thin N Crispy Pizza","revenueShare":5.30,"weightedRating":4.07,"quadrant":"Cash Cows"},
+  {"category":"Veg Pizza","revenueShare":5.15,"weightedRating":4.14,"quadrant":"Review Needed"},
+  {"category":"Non Veg Pizza","revenueShare":5.00,"weightedRating":4.32,"quadrant":"Hidden Gems"},
+  {"category":"Pizza","revenueShare":4.28,"weightedRating":4.20,"quadrant":"Review Needed"},
+  {"category":"Chinese","revenueShare":4.26,"weightedRating":4.25,"quadrant":"Review Needed"},
+  {"category":"Beverage","revenueShare":4.11,"weightedRating":4.38,"quadrant":"Hidden Gems"},
+  {"category":"Rice","revenueShare":3.84,"weightedRating":4.33,"quadrant":"Hidden Gems"},
+  {"category":"Pasta","revenueShare":3.65,"weightedRating":4.12,"quadrant":"Review Needed"}
+]

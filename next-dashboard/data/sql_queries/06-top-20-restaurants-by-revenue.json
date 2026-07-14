@@ -1,0 +1,168 @@
+{
+  "name": "Top 20 Restaurants by Revenue",
+  "slug": "top-20-restaurants-by-revenue",
+  "description": "Highlights top-performing restaurant partners by revenue for strategic account management and co-marketing opportunities.",
+  "sql": "SELECT\n    \"Restaurant Name\"                    AS \"Restaurant\",\n    City,\n    State,\n    COUNT(*)                             AS \"Orders\",\n    ROUND(SUM(\"Price (INR)\"), 2)         AS \"Revenue (INR)\",\n    ROUND(AVG(Rating), 2)                AS \"Avg Rating\"\nFROM orders\nGROUP BY \"Restaurant Name\", City, State\nORDER BY \"Revenue (INR)\" DESC\nLIMIT 20;",
+  "rows": [
+    {
+      "Restaurant": "McDonald's",
+      "City": "Bengaluru",
+      "State": "Karnataka",
+      "Orders": 2032,
+      "Revenue (INR)": 516113.77,
+      "Avg Rating": 4.36
+    },
+    {
+      "Restaurant": "KFC",
+      "City": "Ahmedabad",
+      "State": "Gujarat",
+      "Orders": 1277,
+      "Revenue (INR)": 451872.27,
+      "Avg Rating": 4.35
+    },
+    {
+      "Restaurant": "McDonald's",
+      "City": "Ahmedabad",
+      "State": "Gujarat",
+      "Orders": 1509,
+      "Revenue (INR)": 391035.15,
+      "Avg Rating": 4.42
+    },
+    {
+      "Restaurant": "Olio - The Wood Fired Pizzeria",
+      "City": "Bengaluru",
+      "State": "Karnataka",
+      "Orders": 922,
+      "Revenue (INR)": 385962.0,
+      "Avg Rating": 4.2
+    },
+    {
+      "Restaurant": "KFC",
+      "City": "Chandigarh",
+      "State": "Punjab",
+      "Orders": 1066,
+      "Revenue (INR)": 374990.73,
+      "Avg Rating": 4.38
+    },
+    {
+      "Restaurant": "McDonald's",
+      "City": "Mumbai",
+      "State": "Maharashtra",
+      "Orders": 1426,
+      "Revenue (INR)": 352901.88,
+      "Avg Rating": 4.46
+    },
+    {
+      "Restaurant": "McDonald's",
+      "City": "Chennai",
+      "State": "Tamil Nadu",
+      "Orders": 1227,
+      "Revenue (INR)": 323674.72,
+      "Avg Rating": 4.33
+    },
+    {
+      "Restaurant": "KFC",
+      "City": "Bengaluru",
+      "State": "Karnataka",
+      "Orders": 1034,
+      "Revenue (INR)": 309715.34,
+      "Avg Rating": 4.19
+    },
+    {
+      "Restaurant": "KFC",
+      "City": "Kolkata",
+      "State": "West Bengal",
+      "Orders": 971,
+      "Revenue (INR)": 292347.52,
+      "Avg Rating": 4.35
+    },
+    {
+      "Restaurant": "ITC Master Chef Creations",
+      "City": "Bengaluru",
+      "State": "Karnataka",
+      "Orders": 594,
+      "Revenue (INR)": 281434.0,
+      "Avg Rating": 4.43
+    },
+    {
+      "Restaurant": "KFC",
+      "City": "Lucknow",
+      "State": "Uttar Pradesh",
+      "Orders": 932,
+      "Revenue (INR)": 280657.72,
+      "Avg Rating": 4.31
+    },
+    {
+      "Restaurant": "McDonald's",
+      "City": "Indore",
+      "State": "Madhya Pradesh",
+      "Orders": 1101,
+      "Revenue (INR)": 280007.75,
+      "Avg Rating": 4.39
+    },
+    {
+      "Restaurant": "McDonald's",
+      "City": "Lucknow",
+      "State": "Uttar Pradesh",
+      "Orders": 1177,
+      "Revenue (INR)": 274036.66,
+      "Avg Rating": 4.41
+    },
+    {
+      "Restaurant": "Labonel Fine Baking",
+      "City": "Hyderabad",
+      "State": "Telangana",
+      "Orders": 154,
+      "Revenue (INR)": 272780.0,
+      "Avg Rating": 4.51
+    },
+    {
+      "Restaurant": "McDonald's",
+      "City": "New Delhi",
+      "State": "Delhi",
+      "Orders": 1205,
+      "Revenue (INR)": 262082.21,
+      "Avg Rating": 4.44
+    },
+    {
+      "Restaurant": "Aromas Cafe & Bistro",
+      "City": "Mumbai",
+      "State": "Maharashtra",
+      "Orders": 676,
+      "Revenue (INR)": 255038.02,
+      "Avg Rating": 4.37
+    },
+    {
+      "Restaurant": "Baskin Robbins - Ice Cream Desserts",
+      "City": "Bengaluru",
+      "State": "Karnataka",
+      "Orders": 1219,
+      "Revenue (INR)": 251406.21,
+      "Avg Rating": 4.38
+    },
+    {
+      "Restaurant": "Pizza Hut",
+      "City": "Bengaluru",
+      "State": "Karnataka",
+      "Orders": 826,
+      "Revenue (INR)": 239407.9,
+      "Avg Rating": 4.06
+    },
+    {
+      "Restaurant": "Burger King",
+      "City": "Chandigarh",
+      "State": "Punjab",
+      "Orders": 854,
+      "Revenue (INR)": 232053.4,
+      "Avg Rating": 4.31
+    },
+    {
+      "Restaurant": "The Good Bowl",
+      "City": "Bengaluru",
+      "State": "Karnataka",
+      "Orders": 888,
+      "Revenue (INR)": 222242.5,
+      "Avg Rating": 4.3
+    }
+  ]
+}

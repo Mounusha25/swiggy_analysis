@@ -1,0 +1,204 @@
+{
+  "name": "Restaurant Cohort Retention",
+  "slug": "restaurant-cohort-retention",
+  "description": "Builds monthly restaurant-partner cohorts and measures the share that remains active in each later month.",
+  "sql": "WITH restaurant_months AS (\n    SELECT DISTINCT\n        \"Restaurant Name\"                  AS Restaurant,\n        Year_Month                         AS Active_Month\n    FROM orders\n),\ncohorts AS (\n    SELECT\n        Restaurant,\n        MIN(Active_Month)                  AS Cohort_Month\n    FROM restaurant_months\n    GROUP BY Restaurant\n),\nactivity AS (\n    SELECT\n        c.Cohort_Month,\n        rm.Active_Month,\n        ((CAST(substr(rm.Active_Month, 1, 4) AS INTEGER) - CAST(substr(c.Cohort_Month, 1, 4) AS INTEGER)) * 12\n         + (CAST(substr(rm.Active_Month, 6, 2) AS INTEGER) - CAST(substr(c.Cohort_Month, 6, 2) AS INTEGER)))\n                                           AS Cohort_Index,\n        rm.Restaurant\n    FROM restaurant_months rm\n    JOIN cohorts c ON rm.Restaurant = c.Restaurant\n),\nretention AS (\n    SELECT\n        Cohort_Month,\n        Cohort_Index,\n        COUNT(DISTINCT Restaurant)          AS Active_Restaurants\n    FROM activity\n    GROUP BY Cohort_Month, Cohort_Index\n),\ncohort_sizes AS (\n    SELECT\n        Cohort_Month,\n        Active_Restaurants                 AS Cohort_Size\n    FROM retention\n    WHERE Cohort_Index = 0\n)\nSELECT\n    r.Cohort_Month,\n    r.Cohort_Index                         AS \"Months Since First Order\",\n    cs.Cohort_Size,\n    r.Active_Restaurants,\n    ROUND(r.Active_Restaurants * 100.0 / cs.Cohort_Size, 2)\n                                           AS \"Retention %\"\nFROM retention r\nJOIN cohort_sizes cs ON r.Cohort_Month = cs.Cohort_Month\nORDER BY r.Cohort_Month, r.Cohort_Index;",
+  "rows": [
+    {
+      "Cohort_Month": "2025-01",
+      "Months Since First Order": 0,
+      "Cohort_Size": 966,
+      "Active_Restaurants": 966,
+      "Retention %": 100.0
+    },
+    {
+      "Cohort_Month": "2025-01",
+      "Months Since First Order": 1,
+      "Cohort_Size": 966,
+      "Active_Restaurants": 948,
+      "Retention %": 98.14
+    },
+    {
+      "Cohort_Month": "2025-01",
+      "Months Since First Order": 2,
+      "Cohort_Size": 966,
+      "Active_Restaurants": 935,
+      "Retention %": 96.79
+    },
+    {
+      "Cohort_Month": "2025-01",
+      "Months Since First Order": 3,
+      "Cohort_Size": 966,
+      "Active_Restaurants": 943,
+      "Retention %": 97.62
+    },
+    {
+      "Cohort_Month": "2025-01",
+      "Months Since First Order": 4,
+      "Cohort_Size": 966,
+      "Active_Restaurants": 937,
+      "Retention %": 97.0
+    },
+    {
+      "Cohort_Month": "2025-01",
+      "Months Since First Order": 5,
+      "Cohort_Size": 966,
+      "Active_Restaurants": 938,
+      "Retention %": 97.1
+    },
+    {
+      "Cohort_Month": "2025-01",
+      "Months Since First Order": 6,
+      "Cohort_Size": 966,
+      "Active_Restaurants": 942,
+      "Retention %": 97.52
+    },
+    {
+      "Cohort_Month": "2025-01",
+      "Months Since First Order": 7,
+      "Cohort_Size": 966,
+      "Active_Restaurants": 947,
+      "Retention %": 98.03
+    },
+    {
+      "Cohort_Month": "2025-02",
+      "Months Since First Order": 0,
+      "Cohort_Size": 18,
+      "Active_Restaurants": 18,
+      "Retention %": 100.0
+    },
+    {
+      "Cohort_Month": "2025-02",
+      "Months Since First Order": 1,
+      "Cohort_Size": 18,
+      "Active_Restaurants": 13,
+      "Retention %": 72.22
+    },
+    {
+      "Cohort_Month": "2025-02",
+      "Months Since First Order": 2,
+      "Cohort_Size": 18,
+      "Active_Restaurants": 13,
+      "Retention %": 72.22
+    },
+    {
+      "Cohort_Month": "2025-02",
+      "Months Since First Order": 3,
+      "Cohort_Size": 18,
+      "Active_Restaurants": 14,
+      "Retention %": 77.78
+    },
+    {
+      "Cohort_Month": "2025-02",
+      "Months Since First Order": 4,
+      "Cohort_Size": 18,
+      "Active_Restaurants": 11,
+      "Retention %": 61.11
+    },
+    {
+      "Cohort_Month": "2025-02",
+      "Months Since First Order": 5,
+      "Cohort_Size": 18,
+      "Active_Restaurants": 12,
+      "Retention %": 66.67
+    },
+    {
+      "Cohort_Month": "2025-02",
+      "Months Since First Order": 6,
+      "Cohort_Size": 18,
+      "Active_Restaurants": 13,
+      "Retention %": 72.22
+    },
+    {
+      "Cohort_Month": "2025-03",
+      "Months Since First Order": 0,
+      "Cohort_Size": 4,
+      "Active_Restaurants": 4,
+      "Retention %": 100.0
+    },
+    {
+      "Cohort_Month": "2025-03",
+      "Months Since First Order": 1,
+      "Cohort_Size": 4,
+      "Active_Restaurants": 2,
+      "Retention %": 50.0
+    },
+    {
+      "Cohort_Month": "2025-03",
+      "Months Since First Order": 2,
+      "Cohort_Size": 4,
+      "Active_Restaurants": 2,
+      "Retention %": 50.0
+    },
+    {
+      "Cohort_Month": "2025-03",
+      "Months Since First Order": 3,
+      "Cohort_Size": 4,
+      "Active_Restaurants": 1,
+      "Retention %": 25.0
+    },
+    {
+      "Cohort_Month": "2025-03",
+      "Months Since First Order": 4,
+      "Cohort_Size": 4,
+      "Active_Restaurants": 3,
+      "Retention %": 75.0
+    },
+    {
+      "Cohort_Month": "2025-03",
+      "Months Since First Order": 5,
+      "Cohort_Size": 4,
+      "Active_Restaurants": 2,
+      "Retention %": 50.0
+    },
+    {
+      "Cohort_Month": "2025-04",
+      "Months Since First Order": 0,
+      "Cohort_Size": 1,
+      "Active_Restaurants": 1,
+      "Retention %": 100.0
+    },
+    {
+      "Cohort_Month": "2025-04",
+      "Months Since First Order": 1,
+      "Cohort_Size": 1,
+      "Active_Restaurants": 1,
+      "Retention %": 100.0
+    },
+    {
+      "Cohort_Month": "2025-04",
+      "Months Since First Order": 2,
+      "Cohort_Size": 1,
+      "Active_Restaurants": 1,
+      "Retention %": 100.0
+    },
+    {
+      "Cohort_Month": "2025-04",
+      "Months Since First Order": 4,
+      "Cohort_Size": 1,
+      "Active_Restaurants": 1,
+      "Retention %": 100.0
+    },
+    {
+      "Cohort_Month": "2025-05",
+      "Months Since First Order": 0,
+      "Cohort_Size": 1,
+      "Active_Restaurants": 1,
+      "Retention %": 100.0
+    },
+    {
+      "Cohort_Month": "2025-06",
+      "Months Since First Order": 0,
+      "Cohort_Size": 2,
+      "Active_Restaurants": 2,
+      "Retention %": 100.0
+    },
+    {
+      "Cohort_Month": "2025-07",
+      "Months Since First Order": 0,
+      "Cohort_Size": 1,
+      "Active_Restaurants": 1,
+      "Retention %": 100.0
+    }
+  ]
+}

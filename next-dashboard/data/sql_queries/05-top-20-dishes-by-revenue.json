@@ -1,0 +1,148 @@
+{
+  "name": "Top 20 Dishes by Revenue",
+  "slug": "top-20-dishes-by-revenue",
+  "description": "Identifies highest-revenue dishes to inform menu optimisation, promotions, and restaurant partnership decisions.",
+  "sql": "SELECT\n    \"Dish Name\"                          AS \"Dish\",\n    COUNT(*)                             AS \"Orders\",\n    ROUND(SUM(\"Price (INR)\"), 2)         AS \"Revenue (INR)\",\n    ROUND(AVG(\"Price (INR)\"), 2)         AS \"Avg Price (INR)\",\n    ROUND(AVG(Rating), 2)                AS \"Avg Rating\"\nFROM orders\nGROUP BY \"Dish Name\"\nORDER BY \"Revenue (INR)\" DESC\nLIMIT 20;",
+  "rows": [
+    {
+      "Dish": "Bold BBQ Veggie Thin n Crispy",
+      "Orders": 133,
+      "Revenue (INR)": 99617.0,
+      "Avg Price (INR)": 749.0,
+      "Avg Rating": 3.95
+    },
+    {
+      "Dish": "Korean & Thai Roll Chicken Meal",
+      "Orders": 168,
+      "Revenue (INR)": 95591.57,
+      "Avg Price (INR)": 569.0,
+      "Avg Rating": 4.32
+    },
+    {
+      "Dish": "Full House Popcorn Chicken Bucket",
+      "Orders": 66,
+      "Revenue (INR)": 79200.0,
+      "Avg Price (INR)": 1200.0,
+      "Avg Rating": 4.3
+    },
+    {
+      "Dish": "Triple Chicken Feast",
+      "Orders": 173,
+      "Revenue (INR)": 70757.0,
+      "Avg Price (INR)": 409.0,
+      "Avg Rating": 4.25
+    },
+    {
+      "Dish": "Indian Tandoori Roll Chicken Meal",
+      "Orders": 168,
+      "Revenue (INR)": 70392.05,
+      "Avg Price (INR)": 419.0,
+      "Avg Rating": 4.21
+    },
+    {
+      "Dish": "Big 12 - Chicken Bucket",
+      "Orders": 85,
+      "Revenue (INR)": 69738.12,
+      "Avg Price (INR)": 820.45,
+      "Avg Rating": 4.36
+    },
+    {
+      "Dish": "Veggie Supreme",
+      "Orders": 179,
+      "Revenue (INR)": 67841.0,
+      "Avg Price (INR)": 379.0,
+      "Avg Rating": 4.11
+    },
+    {
+      "Dish": "Paneer Butter Masala",
+      "Orders": 226,
+      "Revenue (INR)": 67411.82,
+      "Avg Price (INR)": 298.28,
+      "Avg Rating": 4.21
+    },
+    {
+      "Dish": "Hot & Crispy Chicken - 8 pcs",
+      "Orders": 84,
+      "Revenue (INR)": 67359.9,
+      "Avg Price (INR)": 801.9,
+      "Avg Rating": 4.29
+    },
+    {
+      "Dish": "Ultimate Savings Chicken Bucket",
+      "Orders": 84,
+      "Revenue (INR)": 64611.68,
+      "Avg Price (INR)": 769.19,
+      "Avg Rating": 4.35
+    },
+    {
+      "Dish": "Chicken Supreme Thin n Crispy",
+      "Orders": 67,
+      "Revenue (INR)": 63583.0,
+      "Avg Price (INR)": 949.0,
+      "Avg Rating": 4.24
+    },
+    {
+      "Dish": "Big 8 - Chicken Bucket",
+      "Orders": 80,
+      "Revenue (INR)": 61527.52,
+      "Avg Price (INR)": 769.09,
+      "Avg Rating": 4.28
+    },
+    {
+      "Dish": "Big Big 6in1 Pizza - Non Veg",
+      "Orders": 27,
+      "Revenue (INR)": 59373.0,
+      "Avg Price (INR)": 2199.0,
+      "Avg Rating": 4.43
+    },
+    {
+      "Dish": "Thai Spicy Roll & Zinger Chicken Meal",
+      "Orders": 141,
+      "Revenue (INR)": 59079.05,
+      "Avg Price (INR)": 419.0,
+      "Avg Rating": 4.21
+    },
+    {
+      "Dish": "Korean Tangy Roll & Zinger Chicken Meal",
+      "Orders": 141,
+      "Revenue (INR)": 59079.05,
+      "Avg Price (INR)": 419.0,
+      "Avg Rating": 4.27
+    },
+    {
+      "Dish": "Spicy Zinger Burger and Popcorn Meal",
+      "Orders": 125,
+      "Revenue (INR)": 57623.05,
+      "Avg Price (INR)": 460.98,
+      "Avg Rating": 4.33
+    },
+    {
+      "Dish": "Chicken Supreme",
+      "Orders": 142,
+      "Revenue (INR)": 57444.0,
+      "Avg Price (INR)": 404.54,
+      "Avg Rating": 4.28
+    },
+    {
+      "Dish": "Chicken Pepperoni Thin n Crispy",
+      "Orders": 67,
+      "Revenue (INR)": 56883.0,
+      "Avg Price (INR)": 849.0,
+      "Avg Rating": 4.28
+    },
+    {
+      "Dish": "Peri Peri Chicken 5 Leg Piece Meal",
+      "Orders": 85,
+      "Revenue (INR)": 56016.45,
+      "Avg Price (INR)": 659.02,
+      "Avg Rating": 4.32
+    },
+    {
+      "Dish": "Korean Tangy Roll & Popcorn Chicken Meal",
+      "Orders": 167,
+      "Revenue (INR)": 53273.05,
+      "Avg Price (INR)": 319.0,
+      "Avg Rating": 4.18
+    }
+  ]
+}

@@ -1,0 +1,93 @@
+{
+  "name": "Pareto: Cities Driving 80% Revenue",
+  "slug": "pareto-cities-driving-80-revenue",
+  "description": "Identifies the minimum set of cities that together generate 80% of total revenue (Pareto / 80-20 rule).",
+  "sql": "WITH city_rev AS (\n    SELECT\n        City,\n        ROUND(SUM(\"Price (INR)\"), 2)     AS Revenue\n    FROM orders\n    GROUP BY City\n    ORDER BY Revenue DESC\n),\ncumulative AS (\n    SELECT\n        City,\n        Revenue,\n        ROUND(\n            SUM(Revenue) OVER (ORDER BY Revenue DESC) /\n            SUM(Revenue) OVER () * 100\n        , 2)                             AS \"Cumulative Revenue %\"\n    FROM city_rev\n)\nSELECT *\nFROM cumulative\nWHERE \"Cumulative Revenue %\" <= 80\nORDER BY Revenue DESC;",
+  "rows": [
+    {
+      "City": "Bengaluru",
+      "Revenue": 5456798.41,
+      "Cumulative Revenue %": 10.29
+    },
+    {
+      "City": "Lucknow",
+      "Revenue": 3117359.65,
+      "Cumulative Revenue %": 16.17
+    },
+    {
+      "City": "Hyderabad",
+      "Revenue": 3021711.62,
+      "Cumulative Revenue %": 21.87
+    },
+    {
+      "City": "Mumbai",
+      "Revenue": 3015573.35,
+      "Cumulative Revenue %": 27.56
+    },
+    {
+      "City": "New Delhi",
+      "Revenue": 2829180.6,
+      "Cumulative Revenue %": 32.9
+    },
+    {
+      "City": "Ahmedabad",
+      "Revenue": 2817836.02,
+      "Cumulative Revenue %": 38.21
+    },
+    {
+      "City": "Chandigarh",
+      "Revenue": 2809440.69,
+      "Cumulative Revenue %": 43.51
+    },
+    {
+      "City": "Kolkata",
+      "Revenue": 2662801.76,
+      "Cumulative Revenue %": 48.54
+    },
+    {
+      "City": "Chennai",
+      "Revenue": 2642594.63,
+      "Cumulative Revenue %": 53.52
+    },
+    {
+      "City": "Jaipur",
+      "Revenue": 2502932.61,
+      "Cumulative Revenue %": 58.24
+    },
+    {
+      "City": "Indore",
+      "Revenue": 1970100.77,
+      "Cumulative Revenue %": 61.96
+    },
+    {
+      "City": "Panaji",
+      "Revenue": 1539479.41,
+      "Cumulative Revenue %": 64.86
+    },
+    {
+      "City": "Gurgaon",
+      "Revenue": 1438455.54,
+      "Cumulative Revenue %": 67.58
+    },
+    {
+      "City": "Shillong",
+      "Revenue": 1427851.75,
+      "Cumulative Revenue %": 70.27
+    },
+    {
+      "City": "Shimla",
+      "Revenue": 1382689.18,
+      "Cumulative Revenue %": 72.88
+    },
+    {
+      "City": "Srinagar",
+      "Revenue": 1322513.82,
+      "Cumulative Revenue %": 75.37
+    },
+    {
+      "City": "Dehradun",
+      "Revenue": 1301699.7,
+      "Cumulative Revenue %": 77.83
+    }
+  ]
+}

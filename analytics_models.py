@@ -399,8 +399,12 @@ def validate_revenue_forecast(df: pd.DataFrame, horizon: int = 3) -> tuple[pd.Da
     monthly.index = pd.PeriodIndex(monthly.index, freq="M")
 
     if len(monthly) < 4:
-        empty = pd.DataFrame()
-        return empty, empty, empty
+        validation = pd.DataFrame(
+            columns=["Month", "Actual Revenue", "Naive Baseline", "3-Month Moving Average", "ARIMA(1,1,1)"]
+        )
+        metrics = pd.DataFrame(columns=["Model", "MAPE (%)", "RMSE", "Holdout Months"])
+        forecast = pd.DataFrame(columns=["Month", "Forecast Revenue (INR)", "Selected Model"])
+        return validation, metrics, forecast
 
     holdout_size = min(2, max(1, len(monthly) // 4))
     train = monthly.iloc[:-holdout_size]

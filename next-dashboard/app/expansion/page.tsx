@@ -23,7 +23,7 @@ export default function ExpansionPage() {
       />
       <div className="grid gap-4 xl:grid-cols-[1.4fr_1fr]">
         <section className="xl:col-span-2">
-          <SectionCard title="Executive Recommendations" caption="Top actions translated from the city opportunity and restaurant health models.">
+          <SectionCard title="Executive Recommendations" caption="Top actions translated from the city opportunity and restaurant health models." tooltip="Recommendations are derived from precomputed city opportunity and restaurant health scores, not manually edited in the dashboard.">
             <div className="grid gap-3 md:grid-cols-3">
               <RecommendationCard
                 action={`Prioritize ${topCities[0].City}`}
@@ -44,10 +44,10 @@ export default function ExpansionPage() {
           </SectionCard>
         </section>
 
-        <SectionCard title="City Expansion Opportunity Index" caption="Quadrants compare current revenue performance against precomputed opportunity score.">
+        <SectionCard title="City Expansion Opportunity Index" caption="Quadrants compare current revenue performance against precomputed opportunity score." tooltip="Higher score means stronger expansion potential based on growth, rating, density, and category diversity signals.">
           <OpportunityScatter data={cityIndex} />
         </SectionCard>
-        <SectionCard title="Top 10 Expansion Targets">
+        <SectionCard title="Top 10 Expansion Targets" tooltip="Cities sorted by the Python-generated Opportunity_Score column.">
           <div className="space-y-2">
             {topCities.map((row, index) => (
               <div key={row.City} className="flex items-center justify-between rounded-xl bg-[var(--bg-card-hover)] px-3 py-2 text-xs">
@@ -61,10 +61,11 @@ export default function ExpansionPage() {
         <SectionCard
           title="Restaurant Health Tier Mix"
           caption="At Risk is large because most partners are lower-volume local listings relative to national chains, not because every listing is in real distress."
+          tooltip="Health tiers come from a composite score using revenue contribution, rating, order volume, and recency."
         >
           <DonutChart data={healthCounts as unknown as Record<string, string | number>[]} nameKey="tier" valueKey="count" />
         </SectionCard>
-        <SectionCard title="Top and Bottom Restaurant Health Scores">
+        <SectionCard title="Top and Bottom Restaurant Health Scores" tooltip="Shows the highest and lowest scoring restaurants after applying the Restaurant Health Score model.">
           <div className="grid gap-4 md:grid-cols-2">
             <RestaurantList title="Top 5" rows={topRestaurants} />
             <RestaurantList title="Bottom 5" rows={bottomRestaurants} />

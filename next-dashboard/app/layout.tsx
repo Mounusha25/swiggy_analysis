@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import "@/app/globals.css";
+import { DeliveryAvatar } from "@/components/DeliveryAvatar";
 import { Sidebar } from "@/components/Sidebar";
 
 export const metadata: Metadata = {
@@ -16,6 +17,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <main className="min-h-screen bg-[var(--bg-page)] pl-40">
           <div className="mx-auto max-w-[1180px] px-5 py-5">{children}</div>
         </main>
+        <DeliveryAvatar />
       </body>
     </html>
   );

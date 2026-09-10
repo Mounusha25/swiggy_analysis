@@ -1,17 +1,12 @@
-import { SectionCard } from "@/components/KpiCard";
+import { GeographicExplorer, type StateSummary } from "@/components/GeographicExplorer";
 import { PageHeader } from "@/components/PageHeader";
-import { IndiaRevenueMap, SimpleBarChart } from "@/components/charts/Charts";
-import { aggregateBy, formatCurrency, getOrders } from "@/lib/data";
+import { aggregateBy, getOrders, type OrderRow } from "@/lib/data";
 
 export default function GeographicPage() {
   const orders = getOrders();
-  const states = aggregateBy(orders, "State", "Price (INR)");
   const cities = aggregateBy(orders, "City", "Price (INR)");
-  const mapData = states.map((row) => ({ state: row.name, revenue: row.value }));
-  const topStates = states.slice(0, 8).map((row) => ({ state: row.name, revenue: row.value }));
   const topCities = cities.slice(0, 8).map((row) => ({ city: row.name, revenue: row.value }));
-  const totalRevenue = states.reduce((sum, row) => sum + row.value, 0);
-  const leadingState = states[0];
+  const stateSummaries = buildStateSummaries(orders);
 
   const cumulative = cities.map((row, index) => {
     const total = cities.reduce((sum, item) => sum + item.value, 0);
@@ -26,57 +21,42 @@ export default function GeographicPage() {
         title="Where Revenue Concentrates"
         description="State and city revenue are aggregated from orders_enriched.csv. The India map joins directly on TopoJSON state names."
       />
-      <div className="grid gap-4 xl:grid-cols-[1.2fr_1fr]">
-        <SectionCard title="India Revenue Choropleth" caption="Real India state boundaries via datamaps TopoJSON.">
-          <div className="mb-3 grid gap-3 md:grid-cols-3">
-            <MapStat label="Mapped Revenue" value={formatCurrency(totalRevenue)} />
-            <MapStat label="States Covered" value={states.length.toLocaleString("en-IN")} />
-            <MapStat label="Revenue Leader" value={leadingState.name} helper={formatCurrency(leadingState.value)} />
-          </div>
-          <div className="relative flex h-[520px] items-center justify-center overflow-hidden rounded-xl border border-[var(--border-subtle)] bg-[radial-gradient(circle_at_50%_45%,rgba(255,107,53,0.12),transparent_58%)]">
-            <IndiaRevenueMap data={mapData} width={560} height={500} scaleValue={720} center={[82, 22]} />
-            <div className="absolute bottom-4 left-4 max-w-[260px] rounded-xl border border-[var(--border-subtle)] bg-[#101118]/85 p-3 text-xs text-[var(--text-secondary)] shadow-xl backdrop-blur">
-              <p className="font-semibold text-[var(--text-primary)]">How to read this map</p>
-              <p className="mt-1 leading-5">Each state is colored by total order revenue from `orders_enriched.csv`. Deeper orange means stronger revenue contribution.</p>
-              <div className="mt-3 flex items-center gap-2">
-                <span>Lower</span>
-                <div className="h-2 flex-1 rounded-full bg-[linear-gradient(90deg,#FFD4B4,#FFB789,#FF9560,#E66F3B,#FF6B35)]" />
-                <span>Higher</span>
-              </div>
-            </div>
-          </div>
-        </SectionCard>
-        <div className="grid gap-4">
-          <SectionCard title="Top 8 States" caption="Karnataka leads by a wide margin.">
-            <SimpleBarChart data={topStates as unknown as Record<string, string | number>[]} xKey="state" yKey="revenue" />
-          </SectionCard>
-          <SectionCard title="Top 8 Cities" caption="Bengaluru is the strongest city-level market.">
-            <SimpleBarChart data={topCities as unknown as Record<string, string | number>[]} xKey="city" yKey="revenue" />
-          </SectionCard>
-        </div>
-        <section className="xl:col-span-2">
-          <SectionCard title="City Pareto Snapshot" caption="Cumulative revenue contribution by city, sorted descending.">
-            <div className="grid gap-2 md:grid-cols-4">
-              {cumulative.slice(0, 8).map((row) => (
-                <div key={row.city} className="rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-card-hover)] p-3">
-                  <p className="text-xs text-[var(--text-secondary)]">#{row.rank} {row.city}</p>
-                  <p className="mt-1 text-lg font-medium">{row.cumulative.toFixed(1)}%</p>
-                </div>
-              ))}
-            </div>
-          </SectionCard>
-        </section>
-      </div>
+      <GeographicExplorer stateSummaries={stateSummaries} topCities={topCities} cumulative={cumulative} />
     </>
   );
 }
 
-function MapStat({ label, value, helper }: { label: string; value: string; helper?: string }) {
-  return (
-    <div className="rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-card-hover)] p-3">
-      <p className="text-[11px] font-semibold uppercase tracking-wide text-[var(--text-secondary)]">{label}</p>
-      <p className="mt-1 text-lg font-semibold text-[var(--text-primary)]">{value}</p>
-      {helper ? <p className="mt-1 text-xs text-[var(--text-secondary)]">{helper}</p> : null}
-    </div>
-  );
+function buildStateSummaries(orders: OrderRow[]): StateSummary[] {
+  const stateNames = Array.from(new Set(orders.map((row) => row.State)));
+  return stateNames
+    .map((state) => {
+      const rows = orders.filter((row) => row.State === state);
+      const revenue = rows.reduce((sum, row) => sum + row["Price (INR)"], 0);
+      const avgRating = rows.reduce((sum, row) => sum + row.Rating, 0) / rows.length;
+      return {
+        state,
+        revenue,
+        orders: rows.length,
+        avgOrderValue: revenue / rows.length,
+        avgRating,
+        topCities: rankRows(rows, "City").slice(0, 5),
+        topRestaurants: rankRows(rows, "Restaurant Name").slice(0, 5),
+        topDishes: rankRows(rows, "Dish Name").slice(0, 5),
+        foodSplit: rankRows(rows, "Food Category").slice(0, 5),
+        valueSegments: rankRows(rows, "Value_Segment").slice(0, 5),
+      };
+    })
+    .sort((a, b) => b.revenue - a.revenue);
+}
+
+function rankRows(rows: OrderRow[], key: keyof OrderRow) {
+  const grouped = new Map<string, { name: string; value: number; orders: number }>();
+  rows.forEach((row) => {
+    const name = String(row[key]);
+    const current = grouped.get(name) ?? { name, value: 0, orders: 0 };
+    current.value += row["Price (INR)"];
+    current.orders += 1;
+    grouped.set(name, current);
+  });
+  return Array.from(grouped.values()).sort((a, b) => b.value - a.value);
 }

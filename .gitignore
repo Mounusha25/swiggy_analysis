@@ -143,3 +143,6 @@ next-dashboard/.next/
 *.db
 !next-dashboard/data/*.csv
 .ipynb_checkpoints/
+
+# Local reference clone (separate repo, not part of this project)
+SwiggyAnalysis/

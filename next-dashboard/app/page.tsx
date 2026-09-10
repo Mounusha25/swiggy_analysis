@@ -44,18 +44,18 @@ export default function OverviewPage() {
         <TopRibbon />
 
         <div className="mb-3 grid gap-3 md:grid-cols-5">
-          <KpiCard icon={<IconCurrencyRupee size={24} />} label="Total Revenue" value={formatCurrency(totalRevenue)} subline="+ from 197K orders" />
-          <KpiCard icon={<IconShoppingCart size={24} />} label="Total Orders" value={orders.length.toLocaleString("en-IN")} subline="Jan-Aug 2025" />
-          <KpiCard icon={<IconReportAnalytics size={24} />} label="Avg Order Value" value={`₹${avgOrderValue}`} subline="basket size" />
-          <KpiCard icon={<IconMapPin size={24} />} label="Cities Covered" value={cityIndex.length.toLocaleString("en-IN")} subline={`${stars} tagged Stars`} tone="warning" />
-          <KpiCard icon={<IconUsersGroup size={24} />} label="Restaurants" value={health.length.toLocaleString("en-IN")} subline={`${atRisk} flagged at risk`} tone="danger" />
+          <KpiCard icon={<IconCurrencyRupee size={24} />} label="Total Revenue" value={formatCurrency(totalRevenue)} subline="+ from 197K orders" tooltip="Sum of Price (INR) across all enriched order records." />
+          <KpiCard icon={<IconShoppingCart size={24} />} label="Total Orders" value={orders.length.toLocaleString("en-IN")} subline="Jan-Aug 2025" tooltip="Count of order rows in orders_enriched.csv." />
+          <KpiCard icon={<IconReportAnalytics size={24} />} label="Avg Order Value" value={`₹${avgOrderValue}`} subline="basket size" tooltip="Total revenue divided by total orders." />
+          <KpiCard icon={<IconMapPin size={24} />} label="Cities Covered" value={cityIndex.length.toLocaleString("en-IN")} subline={`${stars} tagged Stars`} tone="warning" tooltip="Cities scored by the Python City Expansion Opportunity Index." />
+          <KpiCard icon={<IconUsersGroup size={24} />} label="Restaurants" value={health.length.toLocaleString("en-IN")} subline={`${atRisk} flagged at risk`} tone="danger" tooltip="Restaurants scored by the Python Restaurant Health Score model." />
         </div>
 
         <div className="grid gap-3 xl:grid-cols-[1.05fr_0.95fr_1.05fr]">
-          <SectionCard title="Revenue Over Time">
+          <SectionCard title="Revenue Over Time" tooltip="Monthly revenue from orders_enriched.csv. The axis is zoomed to the actual revenue range so small changes are visible.">
             <RevenueOverTimeMini data={monthly} />
           </SectionCard>
-          <SectionCard title="Revenue by State">
+          <SectionCard title="Revenue by State" tooltip="State choropleth colored by total revenue. The larger Geographic page supports hover and click drilldown.">
             <div className="relative h-[220px] overflow-hidden rounded-xl bg-[radial-gradient(circle_at_50%_52%,rgba(255,107,53,0.16),transparent_62%)]">
               <div className="absolute left-1/2 top-1 h-[200px] w-[260px] -translate-x-1/2">
                 <IndiaRevenueMap data={states} width={260} height={200} scaleValue={330} center={[82, 22]} />
@@ -67,19 +67,19 @@ export default function OverviewPage() {
               </div>
             </div>
           </SectionCard>
-          <SectionCard title="Menu Intelligence Matrix">
+          <SectionCard title="Menu Intelligence Matrix" tooltip="BCG-style category matrix: revenue share on one axis, weighted rating on the other.">
             <MiniMenuMatrix />
           </SectionCard>
         </div>
 
         <div className="mt-3 grid gap-3 xl:grid-cols-[1.05fr_0.95fr_1.05fr]">
-          <SectionCard title="City Expansion Opportunity Index">
+          <SectionCard title="City Expansion Opportunity Index" tooltip="Composite score from revenue growth, weighted rating, order density, and category diversity.">
             <MiniOpportunityIndex data={cityIndex} />
           </SectionCard>
-          <SectionCard title="Restaurant Health Score">
+          <SectionCard title="Restaurant Health Score" tooltip="Composite restaurant viability score using revenue contribution, rating, order volume, and recency.">
             <HealthScoreCard counts={healthCounts} />
           </SectionCard>
-          <SectionCard title="Demand Heatmap (Time of Day)" caption="Modeled scenario; not observed order-hour data.">
+          <SectionCard title="Demand Heatmap (Time of Day)" caption="Modeled scenario; not observed order-hour data." tooltip="The source data has dates but no order-hour timestamp, so this heatmap is an explicitly labeled modeled demand scenario.">
             <DemandHeatmap />
           </SectionCard>
         </div>
@@ -152,7 +152,7 @@ function RevenueOverTimeMini({ data }: { data: { month: string; revenue: number;
   const points = data.map((row, index) => {
     const x = padLeft + (index / (data.length - 1)) * (width - padLeft - padRight);
     const y = height - padBottom - ((row.revenue - min) / (max - min)) * (height - padTop - padBottom);
-    return { x, y, label: row.month.slice(5), value: row.revenue };
+    return { x, y, label: row.month.slice(5), month: row.month, value: row.revenue, ma3: row.ma3 };
   });
   const maPoints = data.map((row, index) => {
     const x = padLeft + (index / (data.length - 1)) * (width - padLeft - padRight);

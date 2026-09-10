@@ -235,12 +235,16 @@ export function IndiaRevenueMap({
   width = 800,
   scaleValue = 900,
   center = [82, 22.5],
+  selectedState,
+  onStateClick,
 }: {
   data: { state: string; revenue: number }[];
   height?: number;
   width?: number;
   scaleValue?: number;
   center?: [number, number];
+  selectedState?: string;
+  onStateClick?: (state: string) => void;
 }) {
   const revenueByState = new Map(data.map((row) => [row.state, row.revenue]));
   const max = Math.max(...data.map((row) => row.revenue));
@@ -258,16 +262,18 @@ export function IndiaRevenueMap({
           geographies.map((geo) => {
             const stateName = geo.properties.name as string;
             const revenue = revenueByState.get(stateName) ?? 0;
+            const selected = selectedState === stateName;
             return (
               <Geography
                 key={geo.rsmKey}
                 geography={geo}
                 fill={scale(revenue)}
-                stroke={COLORS.borderSubtle}
-                strokeWidth={0.5}
+                stroke={selected ? COLORS.textPrimary : COLORS.borderSubtle}
+                strokeWidth={selected ? 1.4 : 0.5}
+                onClick={() => onStateClick?.(stateName)}
                 style={{
-                  default: { outline: "none" },
-                  hover: { fill: COLORS.accent, outline: "none" },
+                  default: { cursor: onStateClick ? "pointer" : "default", outline: "none" },
+                  hover: { cursor: onStateClick ? "pointer" : "default", fill: COLORS.accent, outline: "none" },
                   pressed: { outline: "none" },
                 }}
               />

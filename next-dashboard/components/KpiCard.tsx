@@ -4,9 +4,10 @@ type KpiCardProps = {
   subline?: string;
   tone?: "default" | "danger" | "warning";
   icon?: React.ReactNode;
+  tooltip?: string;
 };
 
-export function KpiCard({ label, value, subline, tone = "default", icon }: KpiCardProps) {
+export function KpiCard({ label, value, subline, tone = "default", icon, tooltip: _tooltip }: KpiCardProps) {
   const sublineColor =
     tone === "danger"
       ? "text-[var(--tier-critical)]"
@@ -32,10 +33,12 @@ export function SectionCard({
   title,
   caption,
   children,
+  tooltip: _tooltip,
 }: {
   title: string;
   caption?: string;
   children: React.ReactNode;
+  tooltip?: string;
 }) {
   return (
     <section className="rounded-[15px] border border-[var(--border-subtle)] bg-[linear-gradient(180deg,#171821,#101118)] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.03),0_18px_34px_rgba(0,0,0,0.28)]">

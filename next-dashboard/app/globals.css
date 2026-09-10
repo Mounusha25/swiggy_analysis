@@ -46,3 +46,60 @@ a {
   fill: var(--text-secondary);
   font-size: 11px;
 }
+
+.delivery-avatar-track {
+  will-change: transform;
+  animation: delivery-cruise 48s linear infinite;
+}
+
+.delivery-avatar-track:hover {
+  animation-play-state: paused;
+}
+
+.delivery-courier-button {
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+}
+
+.delivery-courier-figure {
+  transform-style: preserve-3d;
+  transform: perspective(700px) rotateY(-6deg);
+  animation: delivery-courier-bob 3.2s ease-in-out infinite;
+}
+
+.delivery-courier-svg {
+  display: block;
+  pointer-events: none;
+  user-select: none;
+}
+
+@keyframes delivery-cruise {
+  0% {
+    transform: translateX(-140px);
+  }
+  94% {
+    transform: translateX(calc(100vw - 360px));
+  }
+  100% {
+    transform: translateX(calc(100vw - 360px));
+  }
+}
+
+@keyframes delivery-courier-bob {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 -3px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .delivery-avatar-track,
+  .delivery-courier-figure {
+    animation: none;
+  }
+}
